@@ -1,0 +1,983 @@
+fileFormatVersion: 2
+guid: ffc84f51b6025754c9c04961b93e8987
+timeCreated: 1476311755
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: Scenery2_0
+    21300002: Scenery2_1
+    21300004: Scenery2_2
+    21300006: Scenery2_3
+    21300008: Scenery2_4
+    21300010: Scenery2_5
+    21300012: Scenery2_6
+    21300014: Scenery2_7
+    21300016: Scenery2_8
+    21300018: Scenery2_9
+    21300020: Scenery2_10
+    21300022: Scenery2_11
+    21300024: Scenery2_12
+    21300026: Scenery2_13
+    21300028: Scenery2_14
+    21300030: Scenery2_15
+    21300032: Scenery2_16
+    21300034: Scenery2_17
+    21300036: Scenery2_18
+    21300038: Scenery2_19
+    21300040: Scenery2_20
+    21300042: Scenery2_21
+    21300044: Scenery2_22
+    21300046: Scenery2_23
+    21300048: Scenery2_24
+    21300050: Scenery2_25
+    21300052: Scenery2_26
+    21300054: Scenery2_27
+    21300056: Scenery2_28
+    21300058: Scenery2_29
+    21300060: Scenery2_30
+    21300062: Scenery2_31
+    21300064: Scenery2_32
+    21300066: Scenery2_33
+    21300068: Scenery2_34
+    21300070: Scenery2_35
+    21300072: Scenery2_36
+    21300074: Scenery2_37
+    21300076: Scenery2_38
+    21300078: Scenery2_39
+    21300080: Scenery2_40
+    21300082: Scenery2_41
+    21300084: Scenery2_42
+    21300086: Scenery2_43
+    21300088: Scenery2_44
+    21300090: Scenery2_45
+    21300092: Scenery2_46
+    21300094: Scenery2_47
+    21300096: Scenery2_48
+    21300098: Scenery2_49
+    21300100: Scenery2_50
+    21300102: Scenery2_51
+    21300104: Scenery2_52
+    21300106: Scenery2_53
+    21300108: Scenery2_54
+    21300110: Scenery2_55
+    21300112: Scenery2_56
+    21300114: Scenery2_57
+    21300116: Scenery2_58
+    21300118: Scenery2_59
+    21300120: Scenery2_60
+    21300122: Scenery2_61
+    21300124: Scenery2_62
+    21300126: Scenery2_63
+    21300128: Scenery2_64
+    21300130: Scenery2_65
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 32
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Scenery2_0
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 689
+        width: 32
+        height: 30
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 705
+        width: 16
+        height: 14
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_2
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 688
+        width: 48
+        height: 32
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_3
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 688
+        width: 32
+        height: 20
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_4
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 688
+        width: 48
+        height: 32
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_5
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 640
+        width: 96
+        height: 80
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_6
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 688
+        width: 31
+        height: 16
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_7
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 661
+        width: 16
+        height: 22
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_8
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 672
+        width: 15
+        height: 16
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_9
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 674
+        width: 14
+        height: 12
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_10
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 675
+        width: 13
+        height: 8
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_11
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 673
+        width: 14
+        height: 13
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_12
+      rect:
+        serializedVersion: 2
+        x: 97
+        y: 673
+        width: 14
+        height: 13
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_13
+      rect:
+        serializedVersion: 2
+        x: 113
+        y: 672
+        width: 6
+        height: 7
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_14
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 672
+        width: 15
+        height: 10
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_15
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 654
+        width: 48
+        height: 25
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_16
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 640
+        width: 16
+        height: 31
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_17
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 659
+        width: 13
+        height: 10
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_18
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 663
+        width: 7
+        height: 7
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_19
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 658
+        width: 7
+        height: 7
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_20
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 663
+        width: 11
+        height: 9
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_21
+      rect:
+        serializedVersion: 2
+        x: 116
+        y: 662
+        width: 12
+        height: 9
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_22
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 663
+        width: 11
+        height: 9
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_23
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 581
+        width: 100
+        height: 53
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_24
+      rect:
+        serializedVersion: 2
+        x: 118
+        y: 602
+        width: 36
+        height: 53
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_25
+      rect:
+        serializedVersion: 2
+        x: 166
+        y: 592
+        width: 53
+        height: 64
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_26
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 624
+        width: 30
+        height: 36
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_27
+      rect:
+        serializedVersion: 2
+        x: 117
+        y: 544
+        width: 38
+        height: 44
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_28
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 528
+        width: 80
+        height: 63
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_29
+      rect:
+        serializedVersion: 2
+        x: 228
+        y: 577
+        width: 40
+        height: 46
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_30
+      rect:
+        serializedVersion: 2
+        x: 274
+        y: 577
+        width: 42
+        height: 45
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_31
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 528
+        width: 36
+        height: 45
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_32
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 528
+        width: 48
+        height: 46
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_33
+      rect:
+        serializedVersion: 2
+        x: 241
+        y: 528
+        width: 46
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_34
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 512
+        width: 48
+        height: 55
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_35
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 464
+        width: 48
+        height: 58
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_36
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 464
+        width: 42
+        height: 63
+      alignment: 9
+      pivot: {x: 0.49999982, y: 0.12531342}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_37
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 457
+        width: 57
+        height: 71
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_38
+      rect:
+        serializedVersion: 2
+        x: 163
+        y: 457
+        width: 57
+        height: 71
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_39
+      rect:
+        serializedVersion: 2
+        x: 225
+        y: 450
+        width: 47
+        height: 56
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_40
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 450
+        width: 47
+        height: 56
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_41
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 378
+        width: 54
+        height: 70
+      alignment: 9
+      pivot: {x: 0.4756335, y: 0.24436122}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_42
+      rect:
+        serializedVersion: 2
+        x: 69
+        y: 378
+        width: 55
+        height: 70
+      alignment: 9
+      pivot: {x: 0.49999973, y: 0.26315832}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_43
+      rect:
+        serializedVersion: 2
+        x: 133
+        y: 369
+        width: 53
+        height: 69
+      alignment: 9
+      pivot: {x: 0.4999997, y: 0.22883318}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_44
+      rect:
+        serializedVersion: 2
+        x: 197
+        y: 369
+        width: 53
+        height: 69
+      alignment: 9
+      pivot: {x: 0.49999943, y: 0.19069462}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_45
+      rect:
+        serializedVersion: 2
+        x: 260
+        y: 352
+        width: 40
+        height: 96
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_46
+      rect:
+        serializedVersion: 2
+        x: 308
+        y: 400
+        width: 25
+        height: 43
+      alignment: 9
+      pivot: {x: 0.5, y: 0.17963001}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_47
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 321
+        width: 36
+        height: 45
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_48
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 321
+        width: 36
+        height: 45
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_49
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 304
+        width: 56
+        height: 64
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_50
+      rect:
+        serializedVersion: 2
+        x: 163
+        y: 304
+        width: 56
+        height: 64
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_51
+      rect:
+        serializedVersion: 2
+        x: 307
+        y: 352
+        width: 25
+        height: 43
+      alignment: 9
+      pivot: {x: 0.48855713, y: 0.19293639}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_52
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 272
+        width: 32
+        height: 47
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_53
+      rect:
+        serializedVersion: 2
+        x: 228
+        y: 256
+        width: 40
+        height: 93
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_54
+      rect:
+        serializedVersion: 2
+        x: 276
+        y: 256
+        width: 40
+        height: 93
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_55
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 304
+        width: 16
+        height: 36
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_56
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 224
+        width: 32
+        height: 47
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_57
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 240
+        width: 41
+        height: 54
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_58
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 240
+        width: 41
+        height: 54
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_59
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 240
+        width: 40
+        height: 53
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_60
+      rect:
+        serializedVersion: 2
+        x: 180
+        y: 240
+        width: 40
+        height: 53
+      alignment: 9
+      pivot: {x: 0.4999996, y: 0.19860984}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_61
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 256
+        width: 16
+        height: 36
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_62
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 66
+        width: 80
+        height: 173
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_63
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 192
+        width: 40
+        height: 47
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_64
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 50
+        width: 160
+        height: 204
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Scenery2_65
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 66
+        width: 80
+        height: 126
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
