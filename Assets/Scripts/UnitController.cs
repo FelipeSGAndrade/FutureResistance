@@ -8,8 +8,8 @@ public class UnitController : MonoBehaviour {
 	{
 		public int x;
 		public int y;
-		public int g = 0;
-		public int h = 0;
+		public float g = 0;
+		public float h = 0;
 		public Node parent;
 
 		public Node(int x, int y) {
@@ -17,7 +17,7 @@ public class UnitController : MonoBehaviour {
 			this.y = y;
 		}
 
-		public int f {
+		public float f {
 			get { return h + g; }
 		}
 	}
@@ -88,15 +88,15 @@ public class UnitController : MonoBehaviour {
 
 			for (int i = 0; i < neighbors.Length; i++) {
 				Node neighbor = neighbors[i];
-				int cost = 1;
+				float cost = 1;
 
 				if (neighbor.x != current.x && neighbor.y != current.y)
-					cost = 2;
+					cost = 1.5f;
 
 				if (closedList.Contains(neighbor) || !Walkable(neighbor))
 					continue;
 				else if (openList.Contains(neighbor)) {
-					if (neighbor.f <= current.f + cost)
+					if (neighbor.f <= (neighbor.h + current.g + cost))
 						continue;
 					
 					neighbor.g = current.g + cost;
