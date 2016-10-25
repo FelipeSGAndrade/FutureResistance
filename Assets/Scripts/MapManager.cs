@@ -8,9 +8,10 @@ public class MapManager : MonoBehaviour
 {
 	public static int width = 100;
 	public static int height = 100;
-	public static TerrainEnum[,] map;
+	public static TerrainEnum[,] terrainMap;
+	public static bool[,] walkableMap;
 
-	public GameObject[,] mapObjects;
+	public GameObject[,] objectsMap;
 	public GameObject[,] floorTiles;
 
 	[NonSerialized]
@@ -20,8 +21,9 @@ public class MapManager : MonoBehaviour
 
 	void InitialiseList()
 	{
-		map = new TerrainEnum[width, height];
-		mapObjects = new GameObject[width, height];
+		terrainMap = new TerrainEnum[width, height];
+		walkableMap = new bool[width, height];
+		objectsMap = new GameObject[width, height];
 		floorTiles = new GameObject[width, height];
 	}
 
@@ -31,8 +33,8 @@ public class MapManager : MonoBehaviour
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				TerrainEnum[] chances = GetChances(x, y, lastTile);
-				map[x, y] = chances[Random.Range(0, chances.Length)];
-				lastTile = map[x, y];
+				terrainMap[x, y] = chances[Random.Range(0, chances.Length)];
+				lastTile = terrainMap[x, y];
 			}
 		}
 
@@ -40,6 +42,11 @@ public class MapManager : MonoBehaviour
 		PostGeneration();
 
 		CreateResources();
+	}
+
+	private bool Walkable(TerrainEnum terrain)
+	{
+		return terrain != TerrainEnum.ROCK && terrain != TerrainEnum.TREE;
 	}
 
 	void PostGeneration() {
@@ -56,26 +63,31 @@ public class MapManager : MonoBehaviour
 					(t3 == TerrainEnum.GRASS || t3 == TerrainEnum.NONE) &&
 					(t4 == TerrainEnum.GRASS || t4 == TerrainEnum.NONE))
 				{
-					map[x, y] = TerrainEnum.GRASS;
+					terrainMap[x, y] = TerrainEnum.GRASS;
 				} 
 				else if ((t1 == TerrainEnum.ROCK || t1 == TerrainEnum.ROCKFLOOR || t1 == TerrainEnum.NONE) &&
 						(t2 == TerrainEnum.ROCK || t2 == TerrainEnum.ROCKFLOOR || t2 == TerrainEnum.NONE) &&
 						(t3 == TerrainEnum.ROCK || t3 == TerrainEnum.ROCKFLOOR || t3 == TerrainEnum.NONE) &&
 						(t4 == TerrainEnum.ROCK || t4 == TerrainEnum.ROCKFLOOR || t4 == TerrainEnum.NONE))
 				{
-					map[x, y] = TerrainEnum.ROCK;
+					terrainMap[x, y] = TerrainEnum.ROCK;
 				} 
 
-				if((map[x,y] == TerrainEnum.ROCKFLOOR || map[x,y] == TerrainEnum.ROCK) &&
+				if((terrainMap[x,y] == TerrainEnum.ROCKFLOOR || terrainMap[x,y] == TerrainEnum.ROCK) &&
 						t1 != TerrainEnum.ROCK && t2 != TerrainEnum.ROCK && t3 != TerrainEnum.ROCK && t4 != TerrainEnum.ROCK)
 				{
-					map[x, y] = TerrainEnum.GRASS;
+					terrainMap[x, y] = TerrainEnum.GRASS;
 				}
-				else if(map[x,y] == TerrainEnum.GRASS &&
+				else if(terrainMap[x,y] == TerrainEnum.GRASS &&
 					(t1 == TerrainEnum.ROCK || t2 == TerrainEnum.ROCK || t3 == TerrainEnum.ROCK || t4 == TerrainEnum.ROCK))
 				{
-					map[x, y] = TerrainEnum.ROCKFLOOR;
+					terrainMap[x, y] = TerrainEnum.ROCKFLOOR;
 				}
+
+				if (Walkable(terrainMap[x, y]))
+					walkableMap[x, y] = true;
+				else
+					walkableMap[x, y] = false;
 			}
 		}
 	}
@@ -86,7 +98,7 @@ public class MapManager : MonoBehaviour
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 
-				switch (map[x, y]) {
+				switch (terrainMap[x, y]) {
 					case TerrainEnum.GRASS:
 
 						TerrainEnum t1 = GetTerrainAtPosition(x + 1, y);
@@ -96,7 +108,8 @@ public class MapManager : MonoBehaviour
 							continue;
 
 						if (Random.Range(0, 100) < treeChance) {
-							map[x, y] = TerrainEnum.TREE;
+							terrainMap[x, y] = TerrainEnum.TREE;
+							walkableMap[x, y] = false;
 						}
 						break;
 				}
@@ -154,7 +167,7 @@ public class MapManager : MonoBehaviour
 		if (x < 0 || y < 0 || x >= width || y >= height) {
 			terrain = TerrainEnum.NONE;
 		} else {
-			terrain = map[x, y];
+			terrain = terrainMap[x, y];
 		}
 
 		return terrain;
@@ -215,16 +228,16 @@ public class MapManager : MonoBehaviour
 			rowHolder.SetParent(mapHolder);
 
 			for (int y = 0; y < height; y++) {
-				GameObject floor = SceneHelper.InstantiateFloor(map[x, y], new Vector2(x, y));
+				GameObject floor = SceneHelper.InstantiateFloor(terrainMap[x, y], new Vector2(x, y));
 				floor.transform.SetParent(rowHolder);
 				floorTiles[x, y] = floor;
 
-				GameObject block = SceneHelper.InstantiateObject(map[x, y], new Vector2(x, y));
+				GameObject block = SceneHelper.InstantiateObject(terrainMap[x, y], new Vector2(x, y));
 				if (block != null) {
 					block.transform.SetParent(rowHolder);
 				}
 
-				mapObjects[x, y] = block;
+				objectsMap[x, y] = block;
 			}
 		}
 	}
