@@ -8,6 +8,7 @@ public class GameController : MonoBehaviour {
 	public List<UnitController> characters;
 
 	private AssetsHolder SceneHelper;
+	private MapManager mapManager;
 	private Camera mainCamera;
 
 	// Use this for initialization
@@ -15,10 +16,18 @@ public class GameController : MonoBehaviour {
 		SceneHelper = GetComponent<AssetsHolder>();
 		mainCamera = Camera.main;
 
-		selectedCharacter = SceneHelper.InstantiateChar(new Vector2(5, 5)).GetComponent<UnitController>();
+		mapManager = new MapManager();
+		mapManager.InitializeMap(SceneHelper);
+
+		Vector2 charPosition;
+
+		do {
+			charPosition = new Vector2(Random.Range(1, MapManager.width), Random.Range(1, MapManager.height));
+		} while(MapManager.map[(int)charPosition.x, (int)charPosition.y] == TerrainEnum.ROCK || MapManager.map[(int)charPosition.x, (int)charPosition.y] == TerrainEnum.TREE);
+
+		selectedCharacter = SceneHelper.InstantiateChar(charPosition).GetComponent<UnitController>();
 		characters.Add(selectedCharacter);
 
-		Vector3 charPosition = selectedCharacter.transform.position;
 		mainCamera.transform.position = new Vector3(charPosition.x, charPosition.y, mainCamera.transform.position.z);
 	}
 	

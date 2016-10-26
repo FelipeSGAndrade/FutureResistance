@@ -4,27 +4,10 @@ using System.Collections.Generic;
 
 public class UnitController : MonoBehaviour {
 
-	public class Node
-	{
-		public int x;
-		public int y;
-		public float g = 0;
-		public float h = 0;
-		public Node parent;
-
-		public Node(int x, int y) {
-			this.x = x;
-			this.y = y;
-		}
-
-		public float f {
-			get { return h + g; }
-		}
-	}
-
 	public float moveTime = 0.2f;
 
 	private Vector3 destination = Vector3.back;
+	private List<Vector3> waitingPath = null;
 	private float inverseMoveTime;
 	private SpriteRenderer spriteRenderer;
 	private Animator animator;
@@ -40,7 +23,20 @@ public class UnitController : MonoBehaviour {
 		inverseMoveTime = 1f / moveTime;
 	}
 	
-	// Update is called once per frame
+	void Update() {
+
+		SetUnitMovement();
+	}
+
+	private void SetUnitMovement() {
+
+		if (destination == Vector3.back)
+			return;
+		
+		waitingPath = FindPath(destination);
+		destination = Vector3.back;
+	}
+
 	void FixedUpdate () {
 
 		MoveUnit();
@@ -49,20 +45,23 @@ public class UnitController : MonoBehaviour {
 
 	void MoveUnit()
 	{
-		if (destination == Vector3.back)
+		if (waitingPath == null)
 			return;
 
 		if (movingCoroutine != null)
 			StopCoroutine(movingCoroutine);
 
-		Vector3[] steps = FindPath(destination);
-		movingCoroutine = MovingCoordinator(steps);
+		movingCoroutine = MovingCoordinator(waitingPath.ToArray());
 		StartCoroutine(movingCoroutine);
-		destination = Vector3.back;
+		waitingPath = null;
 	}
 
-	private Vector3[] FindPath(Vector3 destination)
+	private List<Vector3> FindPath(Vector3 destination)
 	{
+		if (!Walkable((int)destination.x, (int)destination.y)) {
+			return new List<Vector3> { transform.position };
+		}
+
 		bool pathFound = false;
 		Node[,] grid = CreateGrid();
 		List<Node> closedList = new List<Node>();
@@ -115,23 +114,18 @@ public class UnitController : MonoBehaviour {
 
 		if (!pathFound) {
 			Debug.Log("Path not Found");
-			return new Vector3[]{ new Vector3(transform.position.x, transform.position.y, 0) };
+			return new List<Vector3> { transform.position };
 		}
 
-		List<Vector3> backwardSteps = new List<Vector3>();
+		List<Vector3> path = new List<Vector3>();
 		do {
-			backwardSteps.Add(new Vector3(current.x, current.y, 0));
+			path.Insert(0, new Vector3(current.x, current.y, 0));
 
 			if(current.parent != null)
 				current = current.parent;
 		} while (current != start);
 
-		Vector3[] steps = new Vector3[backwardSteps.Count];
-		for (int i = 0; i < steps.Length; i++) {
-			steps[i] = backwardSteps[backwardSteps.Count - i - 1];
-		}
-
-		return steps;
+		return path;
 	}
 
 	private Node[,] CreateGrid()
@@ -178,7 +172,12 @@ public class UnitController : MonoBehaviour {
 
 	private bool Walkable(Node neighbor)
 	{
-		TerrainEnum terrain = MapManager.map[neighbor.x, neighbor.y];
+		return Walkable(neighbor.x, neighbor.y);
+	}
+
+	private bool Walkable(int x, int y)
+	{
+		TerrainEnum terrain = MapManager.map[x, y];
 		return terrain != TerrainEnum.ROCK && terrain != TerrainEnum.TREE;
 	}
 
@@ -202,13 +201,13 @@ public class UnitController : MonoBehaviour {
 
 		animator.SetBool("walking", true);
 
-		if ((transform.position.x - end.x) > 0) {
+		if ((transform.position.x - end.x) > 0 && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Left")) {
 			animator.SetTrigger("faceLeft");
-		} else if ((transform.position.x - end.x) < 0) {
+		} else if ((transform.position.x - end.x) < 0 && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Right")) {
 			animator.SetTrigger("faceRight");
-		} else if ((transform.position.y - end.y) > 0) {
+		} else if ((transform.position.y - end.y) > 0 && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Front")) {
 			animator.SetTrigger("faceFront");
-		} else if ((transform.position.y - end.y) < 0) {
+		} else if ((transform.position.y - end.y) < 0 && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Back")) {
 			animator.SetTrigger("faceBack");
 		}
 

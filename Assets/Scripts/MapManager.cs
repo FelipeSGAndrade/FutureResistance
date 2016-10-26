@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
 
-public class MapManager : MonoBehaviour
+public class MapManager
 {
 	public static int width = 100;
 	public static int height = 100;
@@ -17,6 +17,14 @@ public class MapManager : MonoBehaviour
 	public Transform mapHolder;
 	[NonSerialized]
 	public AssetsHolder SceneHelper;
+
+	public void InitializeMap(AssetsHolder sceneHelper)
+	{
+		SceneHelper = sceneHelper;
+		InitialiseList();
+		Generate();
+		Build();
+	}
 
 	void InitialiseList()
 	{
@@ -227,20 +235,5 @@ public class MapManager : MonoBehaviour
 				mapObjects[x, y] = block;
 			}
 		}
-	}
-
-	// Use this for initialization
-	void Start()
-	{
-		SceneHelper = GetComponent<AssetsHolder>();
-		InitialiseList();
-		Generate();
-		Build();
-	}
-	
-	// Update is called once per frame
-	void Update()
-	{
-	
 	}
 }
