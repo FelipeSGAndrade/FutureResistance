@@ -23,7 +23,7 @@ public class GameController : MonoBehaviour {
 
 		do {
 			charPosition = new Vector2(Random.Range(1, MapManager.width), Random.Range(1, MapManager.height));
-		} while(MapManager.map[(int)charPosition.x, (int)charPosition.y] == TerrainEnum.ROCK || MapManager.map[(int)charPosition.x, (int)charPosition.y] == TerrainEnum.TREE);
+		} while(!MapManager.walkableMap[(int)charPosition.x, (int)charPosition.y]);
 
 		selectedCharacter = SceneHelper.InstantiateChar(charPosition).GetComponent<UnitController>();
 		characters.Add(selectedCharacter);
