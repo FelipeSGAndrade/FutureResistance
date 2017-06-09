@@ -11,7 +11,7 @@ public class MapManager
 	public static TerrainEnum[,] terrainMap;
 	public static bool[,] walkableMap;
 
-	public GameObject[,] objectsMap;
+	public static GameObject[,] objectsMap;
 	public GameObject[,] floorTiles;
 
 	[NonSerialized]
@@ -248,5 +248,49 @@ public class MapManager
 				objectsMap[x, y] = block;
 			}
 		}
+	}
+
+	public GameObject CreateObject(GameObject prefab, Vector3 position) {
+
+		return CreateObject(prefab, position, null);
+	}
+
+	public GameObject CreateObject(GameObject prefab, Vector3 position, Sprite sprite) {
+
+		if(objectsMap[(int)position.x, (int)position.y] != null)
+			return null;
+
+		GameObject newObject = SceneHelper.InstantiationHelper(prefab, (Vector2)position);
+		newObject.transform.SetParent(GameObject.Find("Row " + position.x).transform);
+
+		if(sprite != null) {
+			SpriteRenderer renderer = (SpriteRenderer)newObject.GetComponent<SpriteRenderer>();
+			renderer.sprite = sprite;	
+		}
+
+		objectsMap[(int)position.x, (int)position.y] = newObject;
+		walkableMap[(int)position.x, (int)position.y] = !(newObject.layer == LayerMask.NameToLayer("Blocking"));
+
+		return newObject;
+	}
+
+	public static void NotificateChangeFrom(int x, int y){
+
+		NotificateChange(x, y + 1);
+		NotificateChange(x - 1, y);
+		NotificateChange(x, y - 1);
+		NotificateChange(x + 1, y);
+	}
+
+	static void NotificateChange(int x, int y){
+
+		if(objectsMap[x, y] == null)
+			return;
+
+		BlockUnit controller = objectsMap[x, y].GetComponent<BlockUnit>() as BlockUnit;
+		if(controller == null)
+			return;
+
+		controller.UpdateState();
 	}
 }

@@ -15,11 +15,15 @@ public class UnitController : MonoBehaviour {
 	private IEnumerator movingCoroutine = null;
 	private IEnumerator smoothMovementCoroutine = null;
 
+	private Vector3 mapPosition;
+
 	// Use this for initialization
 	void Start () {
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		animator = GetComponent<Animator>();
 		pathFinder = new AStar();
+
+		mapPosition = transform.position;
 
 		inverseMoveTime = 1f / moveTime;
 	}
@@ -71,6 +75,12 @@ public class UnitController : MonoBehaviour {
 
 			smoothMovementCoroutine = SmoothMovement(step);
 			yield return StartCoroutine(smoothMovementCoroutine);
+
+			if(MapManager.objectsMap[(int)step.x, (int)step.y] == null) {
+				MapManager.objectsMap[(int)mapPosition.x, (int)mapPosition.y] = null;
+				MapManager.objectsMap[(int)step.x, (int)step.y] = gameObject;
+				mapPosition = step;
+			}
 		}
 	}
 
@@ -109,5 +119,10 @@ public class UnitController : MonoBehaviour {
 	{
 		if (this.destination == Vector3.back)
 			this.destination = destination;
+	}
+
+	public void Build(GameObject blueprint)
+	{
+		
 	}
 }
