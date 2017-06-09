@@ -7,6 +7,7 @@ public class AssetsHolder : MonoBehaviour{
 	public GameObject Floor;
 	public GameObject Rock;
 	public GameObject Tree;
+	public GameObject Cursor;
 
 	public Sprite[] grassSprites;
 	public Sprite[] rockFloorSprites;
@@ -67,6 +68,11 @@ public class AssetsHolder : MonoBehaviour{
 		return newGameObject;
 	}
 
+	public GameObject InstantiateCursor(Vector3 mousePosition)
+	{
+		return (GameObject)Instantiate(Cursor, mousePosition, Quaternion.identity);
+	}
+
 	public GameObject InstantiationHelper(GameObject prefab, Vector2 position, Sprite[] spriteArray)
 	{
 		GameObject newGameObject = (GameObject)Instantiate(prefab, position, Quaternion.identity);
@@ -75,6 +81,18 @@ public class AssetsHolder : MonoBehaviour{
 		sr.sprite = spriteArray[Random.Range (0, spriteArray.Length)];
 
 		sr.sortingOrder = Mathf.RoundToInt(position.y) * -1;
+
+		return newGameObject;
+	}
+
+	public GameObject InstantiationHelper(GameObject prefab, Vector2 position)
+	{
+		GameObject newGameObject = (GameObject)Instantiate(prefab, position, Quaternion.identity);
+
+		SpriteRenderer sr = newGameObject.GetComponent<SpriteRenderer>();
+		sr.sortingOrder = Mathf.RoundToInt(position.y) * -1;
+
+		newGameObject.name = prefab.name + "(" + position.x + ", " + position.y + ")";
 
 		return newGameObject;
 	}
