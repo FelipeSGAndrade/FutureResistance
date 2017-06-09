@@ -43,22 +43,35 @@ public class BlockUnit : MonoBehaviour {
 		UpdateState();
 	}
 
+	public GameObject getNeighbor(int x, int y) {
+		if (x < 0 || y < 0 || x >= MapManager.width || y >= MapManager.height) {
+			GameObject border = new GameObject();
+			border.tag = tag;
+			return border;
+		}
+
+		return MapManager.objectsMap[x, y];
+	}
+
 	public void UpdateState() {
 
-		if(!updatable)
+		if(!parentsRenderer || !updatable)
 			return;
 
 		int x = (int)transform.position.x;
 		int y = (int)transform.position.y;
 
-		GameObject neighboor = MapManager.objectsMap[x, y + 1];
-		bool up = (neighboor != null && neighboor.CompareTag(gameObject.tag));
-		neighboor = MapManager.objectsMap[x - 1, y];
-		bool left = (neighboor != null && neighboor.CompareTag(gameObject.tag));
-		neighboor = MapManager.objectsMap[x, y - 1];
-		bool down = (neighboor != null && neighboor.CompareTag(gameObject.tag));
-		neighboor = MapManager.objectsMap[x + 1,y];
-		bool right = (neighboor != null && neighboor.CompareTag(gameObject.tag));
+		GameObject neighbor = getNeighbor(x, y + 1);				
+		bool up = (neighbor != null && neighbor.CompareTag(gameObject.tag));
+
+		neighbor = getNeighbor(x - 1, y);
+		bool left = (neighbor != null && neighbor.CompareTag(gameObject.tag));
+
+		neighbor = getNeighbor(x, y - 1);
+		bool down = (neighbor != null && neighbor.CompareTag(gameObject.tag));
+
+		neighbor = getNeighbor(x + 1, y);
+		bool right = (neighbor != null && neighbor.CompareTag(gameObject.tag));
 
 		BlockStateEnum newState = BlockStateEnum.DEFAULT;
 

@@ -44,8 +44,14 @@ public class GameController : MonoBehaviour {
 			else
 				MoveCharacter();
 		}
+
 		if (Input.GetKeyDown(KeyCode.Q))
 			SetAction(1);
+		if (Input.GetKeyDown(KeyCode.E))
+			SetAction(2);
+		if (Input.GetKeyDown(KeyCode.X))
+			SetAction(3);
+
 		if(Input.GetKeyDown(KeyCode.Mouse0))
 			ExecuteAction();
 	}
@@ -94,9 +100,14 @@ public class GameController : MonoBehaviour {
 
 		switch(action) {
 			case 1:
-				
-				GameObject wallPefab = (GameObject)Resources.Load("Prefabs/Wall");
-				((SpriteRenderer)cursor.GetComponent<SpriteRenderer>()).sprite = ((SpriteRenderer)wallPefab.GetComponent<SpriteRenderer>()).sprite;
+			case 2:
+				GameObject wallPefab = (GameObject)Resources.Load ("Prefabs/Wall");
+				((SpriteRenderer)cursor.GetComponent<SpriteRenderer> ()).sprite = ((SpriteRenderer)wallPefab.GetComponent<SpriteRenderer> ()).sprite;
+				break;
+
+			case 3:
+				Sprite cancelSprite = (Sprite)(Resources.LoadAll ("Sprites/Z18-TileA5"))[10];
+				((SpriteRenderer)cursor.GetComponent<SpriteRenderer> ()).sprite = cancelSprite;
 				break;
 		}
 	}
@@ -109,16 +120,28 @@ public class GameController : MonoBehaviour {
 
 	void ExecuteAction() {
 
+		Vector3 position = GetGridMousePosition();
+		bool resetWhenDone = true;
 		switch(currentAction) {
 			case 1:
-				Vector3 position = GetGridMousePosition();
 				if(position != Vector3.back) {
 					Sprite buildingSprite = ((SpriteRenderer)cursor.GetComponent<SpriteRenderer>()).sprite;
 					mapManager.CreateObject((GameObject)Resources.Load("Prefabs/Blueprint"), position, buildingSprite);
 				}
 				break;
+			case 2:
+				if(position != Vector3.back) {
+					mapManager.CreateObject((GameObject)Resources.Load("Prefabs/Wall"), position);
+				}
+				break;
+			case 3:
+				if (position != Vector3.back) {
+					mapManager.DeleteObject(position);
+					resetWhenDone = false;
+				}
+				break;
 		}
 
-		ResetAction();
+		if (resetWhenDone) ResetAction();
 	}
 }

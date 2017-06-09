@@ -274,6 +274,20 @@ public class MapManager
 		return newObject;
 	}
 
+	public void DeleteObject(Vector3 position) {
+
+		int x = (int)position.x;
+		int y = (int)position.y;
+		if (objectsMap [x, y] == null)
+			return;
+
+		GameObject removingObj = objectsMap[x, y];
+		objectsMap[x, y] = null;
+		UnityEngine.Object.Destroy(removingObj);
+
+		NotificateChangeFrom(x, y);
+	}
+
 	public static void NotificateChangeFrom(int x, int y){
 
 		NotificateChange(x, y + 1);
@@ -284,7 +298,7 @@ public class MapManager
 
 	static void NotificateChange(int x, int y){
 
-		if(objectsMap[x, y] == null)
+		if(x < 0 || y < 0 || x >= width || y >= height || objectsMap[x, y] == null)
 			return;
 
 		BlockUnit controller = objectsMap[x, y].GetComponent<BlockUnit>() as BlockUnit;
