@@ -14,6 +14,8 @@ public class GameController : MonoBehaviour {
 	private GameObject cursor;
 	private int currentAction = 0;
 
+	public static Queue<object[]> buildings = new Queue<object[]>();
+
 	// Use this for initialization
 	void Start () {
 		SceneHelper = GetComponent<AssetsHolder>();
@@ -42,7 +44,7 @@ public class GameController : MonoBehaviour {
 			if(currentAction != 0)
 				ResetAction();
 			else
-				MoveCharacter();
+				MoveCharacter(!Input.GetKey(KeyCode.LeftShift));
 		}
 
 		if (Input.GetKeyDown(KeyCode.Q))
@@ -57,16 +59,14 @@ public class GameController : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-
 		cursor.transform.position = GetMousePosition();
 	}
 
-	void MoveCharacter()
-	{
+	void MoveCharacter(bool clearCommands) {
 		Vector3 position = GetGridMousePosition();
 
 		if(position != Vector3.back) {
-			selectedCharacter.SetMovement(position);
+			selectedCharacter.SetMovement(position, clearCommands);
 		}
 	}
 
@@ -89,8 +89,7 @@ public class GameController : MonoBehaviour {
 		return Vector3.back;
 	}
 
-	void SetAction(int action)
-	{
+	void SetAction(int action) {
 		if(action == currentAction) {
 			ResetAction();
 			return;
@@ -113,30 +112,30 @@ public class GameController : MonoBehaviour {
 	}
 
 	void ResetAction() {
-
 		currentAction = 0;
 		((SpriteRenderer)cursor.GetComponent<SpriteRenderer>()).sprite = null;
 	}
 
 	void ExecuteAction() {
-
 		Vector3 position = GetGridMousePosition();
 		bool resetWhenDone = true;
 		switch(currentAction) {
 			case 1:
 				if(position != Vector3.back) {
 					Sprite buildingSprite = ((SpriteRenderer)cursor.GetComponent<SpriteRenderer>()).sprite;
-					mapManager.CreateObject((GameObject)Resources.Load("Prefabs/Blueprint"), position, buildingSprite);
+					GameObject bluePrint = MapManager.CreateObject((GameObject)Resources.Load("Prefabs/Blueprint"), position, buildingSprite, true);
+					bluePrint.GetComponent<BluePrint>().finalObjectPrefab = (GameObject)Resources.Load("Prefabs/Wall");
+					buildings.Enqueue(new object[] { bluePrint, position });
 				}
 				break;
 			case 2:
 				if(position != Vector3.back) {
-					mapManager.CreateObject((GameObject)Resources.Load("Prefabs/Wall"), position);
+					MapManager.CreateObject((GameObject)Resources.Load("Prefabs/Wall"), position);
 				}
 				break;
 			case 3:
 				if (position != Vector3.back) {
-					mapManager.DeleteObject(position);
+					MapManager.DeleteObject(position);
 					resetWhenDone = false;
 				}
 				break;

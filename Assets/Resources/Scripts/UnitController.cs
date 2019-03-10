@@ -6,123 +6,58 @@ public class UnitController : MonoBehaviour {
 
 	public float moveTime = 0.2f;
 
-	private Vector3 destination = Vector3.back;
-	private float inverseMoveTime;
-	private SpriteRenderer spriteRenderer;
-	private Animator animator;
-	private AStar pathFinder;
-
-	private IEnumerator movingCoroutine = null;
-	private IEnumerator smoothMovementCoroutine = null;
-
 	private Vector3 mapPosition;
+
+	private Action currentAction = null;
+	private Queue<Action> actionQueue = new Queue<Action>();
 
 	// Use this for initialization
 	void Start () {
-		spriteRenderer = GetComponent<SpriteRenderer>();
-		animator = GetComponent<Animator>();
-		pathFinder = new AStar();
 
 		mapPosition = transform.position;
-
-		inverseMoveTime = 1f / moveTime;
 	}
 
 	void Update() {
 
-		ProcessMovement();
-	}
+		if (currentAction == null && actionQueue.Count > 0) {
+			currentAction = actionQueue.Dequeue();	
+		}
 
-	void ProcessMovement() {
+		if (currentAction != null && currentAction.IsFinished()) {
+			currentAction = null;
+		}
 
-		if (destination == Vector3.back)
-			return;
+		if (currentAction != null) {
+			currentAction.Update();
+		}
 
-		if (movingCoroutine != null)
-			StopCoroutine(movingCoroutine);
-
-		if(pathFinder.FindPathAsync(transform.position, destination))
-			destination = Vector3.back;
+		if (currentAction == null && actionQueue.Count == 0 && GameController.buildings.Count > 0) {
+			object[] building = GameController.buildings.Dequeue();
+			SetBuildAction((Vector3)building[1], true);
+		}
 	}
 	
-	// Update is called once per frame
-	void FixedUpdate () {
-		
-		MoveUnit();
-		spriteRenderer.sortingOrder = Mathf.RoundToInt(transform.position.y) * -1;
+	public void SetMovement(Vector3 destination, bool clearActions)
+	{
+		if (clearActions) CleanAllActions();
+
+		Action newAction = new Action(gameObject, ActionEnum.MOVE, new MoveCommandArgs(destination, moveTime));
+		actionQueue.Enqueue(newAction);
 	}
 
-	void MoveUnit()
+	public void SetBuildAction(Vector3 position, bool clearActions)
 	{
-		if (!pathFinder.isDone)
-			return;
+		if (clearActions) CleanAllActions();
 
-		List<Vector3> path = pathFinder.GetResult();
-		if (path != null) {
-			movingCoroutine = MovingCoordinator(path.ToArray());
-			StartCoroutine(movingCoroutine);
+		Action newAction = new Action(gameObject, ActionEnum.BUILD, new BuildCommandArgs(position, moveTime));
+		actionQueue.Enqueue(newAction);
+	}
+
+	private void CleanAllActions()
+	{
+		actionQueue.Clear();
+		if (currentAction != null) {
+			currentAction.CleanAllCommands();
 		}
-	}
-
-	private IEnumerator MovingCoordinator(Vector3[] steps)
-	{
-		for(int i = 0; i < steps.Length; i++){
-
-			Vector3 step = steps[i];
-
-			if (smoothMovementCoroutine != null)
-				StopCoroutine(smoothMovementCoroutine);
-
-			smoothMovementCoroutine = SmoothMovement(step);
-			yield return StartCoroutine(smoothMovementCoroutine);
-
-			if(MapManager.objectsMap[(int)step.x, (int)step.y] == null) {
-				MapManager.objectsMap[(int)mapPosition.x, (int)mapPosition.y] = null;
-				MapManager.objectsMap[(int)step.x, (int)step.y] = gameObject;
-				mapPosition = step;
-			}
-		}
-	}
-
-	private IEnumerator SmoothMovement(Vector3 end)
-	{
-		float sqrRemainingDistance = (transform.position - end).sqrMagnitude;
-
-		animator.SetBool("walking", true);
-
-		if ((transform.position.x - end.x) > 0 && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Left")) {
-			animator.SetTrigger("faceLeft");
-		} else if ((transform.position.x - end.x) < 0 && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Right")) {
-			animator.SetTrigger("faceRight");
-		} else if ((transform.position.y - end.y) > 0 && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Front")) {
-			animator.SetTrigger("faceFront");
-		} else if ((transform.position.y - end.y) < 0 && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Back")) {
-			animator.SetTrigger("faceBack");
-		}
-
-		yield return null;
-
-		while (sqrRemainingDistance > float.Epsilon) {
-			
-			Vector3 newPosition = Vector3.MoveTowards(transform.position, end, inverseMoveTime * Time.deltaTime);
-			transform.position = newPosition;
-
-			sqrRemainingDistance = (transform.position - end).sqrMagnitude;
-
-			yield return null;
-		}
-
-		animator.SetBool("walking", false);
-	}
-
-	public void SetMovement(Vector3 destination)
-	{
-		if (this.destination == Vector3.back)
-			this.destination = destination;
-	}
-
-	public void Build(GameObject blueprint)
-	{
-		
 	}
 }
