@@ -17,7 +17,7 @@ public class MapManager
 	[NonSerialized]
 	public Transform mapHolder;
 	[NonSerialized]
-	public AssetsHolder SceneHelper;
+	public static AssetsHolder SceneHelper;
 
 	public void InitializeMap(AssetsHolder sceneHelper)
 	{
@@ -250,12 +250,17 @@ public class MapManager
 		}
 	}
 
-	public GameObject CreateObject(GameObject prefab, Vector3 position) {
+	public static GameObject CreateObject(GameObject prefab, Vector3 position) {
 
-		return CreateObject(prefab, position, null);
+		return CreateObject(prefab, position, null, false);
 	}
 
-	public GameObject CreateObject(GameObject prefab, Vector3 position, Sprite sprite) {
+	public static GameObject CreateObject(GameObject prefab, Vector3 position, Sprite sprite) {
+
+		return CreateObject(prefab, position, sprite, false);
+	}
+
+	public static GameObject CreateObject(GameObject prefab, Vector3 position, Sprite sprite, bool UI) {
 
 		if(objectsMap[(int)position.x, (int)position.y] != null)
 			return null;
@@ -268,13 +273,15 @@ public class MapManager
 			renderer.sprite = sprite;	
 		}
 
-		objectsMap[(int)position.x, (int)position.y] = newObject;
-		walkableMap[(int)position.x, (int)position.y] = !(newObject.layer == LayerMask.NameToLayer("Blocking"));
+		if (!UI) {
+			objectsMap[(int)position.x, (int)position.y] = newObject;
+			walkableMap[(int)position.x, (int)position.y] = !(newObject.layer == LayerMask.NameToLayer("Blocking"));
+		}
 
 		return newObject;
 	}
 
-	public void DeleteObject(Vector3 position) {
+	public static void DeleteObject(Vector3 position) {
 
 		int x = (int)position.x;
 		int y = (int)position.y;
@@ -284,8 +291,15 @@ public class MapManager
 		GameObject removingObj = objectsMap[x, y];
 		objectsMap[x, y] = null;
 		UnityEngine.Object.Destroy(removingObj);
+		walkableMap[x, y] = true;
 
 		NotificateChangeFrom(x, y);
+	}
+
+	public static GameObject ReplaceObject(GameObject prefab, Vector3 position) {
+
+		DeleteObject(position);
+		return CreateObject(prefab, position);
 	}
 
 	public static void NotificateChangeFrom(int x, int y){
@@ -301,10 +315,10 @@ public class MapManager
 		if(x < 0 || y < 0 || x >= width || y >= height || objectsMap[x, y] == null)
 			return;
 
-		BlockUnit controller = objectsMap[x, y].GetComponent<BlockUnit>() as BlockUnit;
-		if(controller == null)
+		AutoTile component = objectsMap[x, y].GetComponent<AutoTile>() as AutoTile;
+		if(component == null)
 			return;
 
-		controller.UpdateState();
+		component.UpdateState();
 	}
 }
