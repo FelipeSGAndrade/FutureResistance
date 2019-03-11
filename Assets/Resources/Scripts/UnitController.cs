@@ -17,23 +17,39 @@ public class UnitController : MonoBehaviour {
 		mapPosition = transform.position;
 	}
 
+	bool isIdle() {
+		return currentAction == null;
+	}
+
+	bool hasActions() {
+		return actionQueue.Count > 0;
+	}
+
+	bool isDone() {
+		return currentAction.IsFinished();
+	}
+
+	bool bluePrintsAvailable() {
+		return GameController.bluePrints.Count > 0;
+	}
+
 	void Update() {
 
-		if (currentAction == null && actionQueue.Count > 0) {
+		if (isIdle() && hasActions()) {
 			currentAction = actionQueue.Dequeue();	
 		}
 
-		if (currentAction != null && currentAction.IsFinished()) {
+		if (!isIdle() && isDone()) {
 			currentAction = null;
 		}
 
-		if (currentAction != null) {
+		if (!isIdle()) {
 			currentAction.Update();
 		}
 
-		if (currentAction == null && actionQueue.Count == 0 && GameController.buildings.Count > 0) {
-			object[] building = GameController.buildings.Dequeue();
-			SetBuildAction((Vector3)building[1], true);
+		if (isIdle() && !hasActions() && bluePrintsAvailable()) {
+			BluePrint bluePrint = GameController.bluePrints.Find(nextBluePrint => !nextBluePrint.taken);
+			SetBuildAction(bluePrint, true);
 		}
 	}
 	
@@ -45,11 +61,12 @@ public class UnitController : MonoBehaviour {
 		actionQueue.Enqueue(newAction);
 	}
 
-	public void SetBuildAction(Vector3 position, bool clearActions)
+	public void SetBuildAction(BluePrint bluePrint, bool clearActions)
 	{
 		if (clearActions) CleanAllActions();
 
-		Action newAction = new Action(gameObject, ActionEnum.BUILD, new BuildCommandArgs(position, moveTime));
+		bluePrint.taken = true;
+		Action newAction = new Action(gameObject, ActionEnum.BUILD, new BuildCommandArgs(bluePrint, moveTime));
 		actionQueue.Enqueue(newAction);
 	}
 

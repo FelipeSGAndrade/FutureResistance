@@ -14,7 +14,7 @@ public class GameController : MonoBehaviour {
 	private GameObject cursor;
 	private int currentAction = 0;
 
-	public static Queue<object[]> buildings = new Queue<object[]>();
+	public static List<BluePrint> bluePrints = new List<BluePrint>();
 
 	// Use this for initialization
 	void Start () {
@@ -37,6 +37,10 @@ public class GameController : MonoBehaviour {
 
 		mainCamera.transform.position = new Vector3(charPosition.x, charPosition.y, mainCamera.transform.position.z);
 	}
+
+	bool isHoldingShift() {
+		return Input.GetKey(KeyCode.LeftShift);
+	}
 	
 	// Update is called once per frame
 	void Update() {
@@ -44,7 +48,7 @@ public class GameController : MonoBehaviour {
 			if(currentAction != 0)
 				ResetAction();
 			else
-				MoveCharacter(!Input.GetKey(KeyCode.LeftShift));
+				MoveCharacter(!isHoldingShift());
 		}
 
 		if (Input.GetKeyDown(KeyCode.Q))
@@ -55,7 +59,7 @@ public class GameController : MonoBehaviour {
 			SetAction(3);
 
 		if(Input.GetKeyDown(KeyCode.Mouse0))
-			ExecuteAction();
+			ExecuteAction(isHoldingShift());
 	}
 
 	void FixedUpdate() {
@@ -116,16 +120,19 @@ public class GameController : MonoBehaviour {
 		((SpriteRenderer)cursor.GetComponent<SpriteRenderer>()).sprite = null;
 	}
 
-	void ExecuteAction() {
+	void ExecuteAction(bool keepAction) {
 		Vector3 position = GetGridMousePosition();
-		bool resetWhenDone = true;
+		bool resetWhenDone = keepAction;
 		switch(currentAction) {
 			case 1:
 				if(position != Vector3.back) {
 					Sprite buildingSprite = ((SpriteRenderer)cursor.GetComponent<SpriteRenderer>()).sprite;
-					GameObject bluePrint = MapManager.CreateObject((GameObject)Resources.Load("Prefabs/Blueprint"), position, buildingSprite, true);
-					bluePrint.GetComponent<BluePrint>().finalObjectPrefab = (GameObject)Resources.Load("Prefabs/Wall");
-					buildings.Enqueue(new object[] { bluePrint, position });
+					GameObject bluePrintObject = MapManager.CreateObject((GameObject)Resources.Load("Prefabs/Blueprint"), position, buildingSprite, false);
+
+					BluePrint bluePrint = bluePrintObject.GetComponent<BluePrint>();
+					bluePrint.finalObjectPrefab = (GameObject)Resources.Load("Prefabs/Wall");
+					bluePrint.position = position;
+					bluePrints.Add(bluePrint);
 				}
 				break;
 			case 2:
