@@ -261,7 +261,6 @@ public class MapManager
 	}
 
 	public static GameObject CreateObject(GameObject prefab, Vector3 position, Sprite sprite, bool UI) {
-
 		if(objectsMap[(int)position.x, (int)position.y] != null)
 			return null;
 
@@ -289,6 +288,7 @@ public class MapManager
 			return;
 
 		GameObject removingObj = objectsMap[x, y];
+		Debug.Log(removingObj);
 		objectsMap[x, y] = null;
 		UnityEngine.Object.Destroy(removingObj);
 		walkableMap[x, y] = true;

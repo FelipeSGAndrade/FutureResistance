@@ -6,21 +6,26 @@ public class MoveCommandArgs : ICommandArgs {
 	public Vector3 destination;
 	public float moveTime;
 
-	public MoveCommandArgs(Vector3 destination, float moveTime) {
+	public bool stopBefore;
+
+	public MoveCommandArgs(Vector3 destination, float moveTime, bool stopBefore = false) {
 		this.destination = destination;
 		this.moveTime = moveTime;
+		this.stopBefore = stopBefore;
 	}
 }
 
 public class MoveCommand : MonoBehaviour, ICommand {
 
 	private Vector3 destination = Vector3.back;
+	private bool stopBefore;
 	private float inverseMoveTime;
 	private SpriteRenderer spriteRenderer;
 	private Animator animator;
 	private AStar pathFinder;
 	private bool execute = false;
 	private bool finished = false;
+	private bool successful = false;
 
 	private IEnumerator movingCoroutine = null;
 	private IEnumerator smoothMovementCoroutine = null;
@@ -43,6 +48,7 @@ public class MoveCommand : MonoBehaviour, ICommand {
 			throw new UnityException("Wrong type of args");
 		
 		this.destination = commandArgs.destination;
+		this.stopBefore = commandArgs.stopBefore;
 		inverseMoveTime = 1f / commandArgs.moveTime;
 
 		execute = true;
@@ -59,13 +65,15 @@ public class MoveCommand : MonoBehaviour, ICommand {
 		return finished;
 	}
 
-	void Update() {
+	public bool isSuccessful() {
+		return successful;
+	}
 
+	void Update() {
 		if (execute) ProcessMovement();
 	}
 
 	void ProcessMovement() {
-		
 		if (movingCoroutine != null)
 			StopCoroutine(movingCoroutine);
 
@@ -75,7 +83,6 @@ public class MoveCommand : MonoBehaviour, ICommand {
 
 	// Update is called once per frame
 	void FixedUpdate () {
-
 		if (pathFinder.isDone) {
 			List<Vector3> path = pathFinder.GetResult();
 			if (path != null) {
@@ -89,19 +96,19 @@ public class MoveCommand : MonoBehaviour, ICommand {
 
 	private IEnumerator MovingCoordinator(Vector3[] steps)
 	{
-		for(int i = 0; i < steps.Length; i++){
+		int lastStep = steps.Length;
+		if (stopBefore) lastStep--;
+
+		for (int i = 0; i < lastStep; i++) {
 
 			Vector3 step = steps[i];
 
 			if (smoothMovementCoroutine != null)
 				StopCoroutine(smoothMovementCoroutine);
 
-			if (MapManager.objectsMap[(int)step.x, (int)step.y] == null) {
-				MapManager.objectsMap[(int)mapPosition.x, (int)mapPosition.y] = null;
-				MapManager.objectsMap[(int)step.x, (int)step.y] = gameObject;
-				mapPosition = step;
-			} else {
+			if (!MapManager.walkableMap[(int)step.x, (int)step.y]) {
 				Stop();
+				successful = false;
 				yield break;
 			}
 
@@ -109,6 +116,7 @@ public class MoveCommand : MonoBehaviour, ICommand {
 			yield return StartCoroutine(smoothMovementCoroutine);
 		}
 
+		successful = true;
 		finished = true;
 	}
 

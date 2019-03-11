@@ -7,11 +7,13 @@ public class Action {
 	private ICommand currentCommand = null;
 	private Queue<ICommandPrefab> commandQueue = new Queue<ICommandPrefab>();
 	private GameObject actingObject;
+	private ICommandArgs args;
 	private bool finished = false;
 
 	public Action(GameObject actingObject, ActionEnum action, ICommandArgs args) {
 
 		this.actingObject = actingObject;
+		this.args = args;
 
 		switch (action) {
 			case ActionEnum.MOVE:
@@ -24,9 +26,8 @@ public class Action {
 				if (buildArgs == null)
 					throw new UnityException("Wrong type of args");
 
-				Vector3 temp = buildArgs.position;
-				temp.x = temp.x - 1;
-				MoveCommandArgs moveArgs = new MoveCommandArgs(buildArgs.position, buildArgs.moveTime);
+				Vector3 position = buildArgs.bluePrint.position;
+				MoveCommandArgs moveArgs = new MoveCommandArgs(position, buildArgs.moveTime, true);
 
 				CommandPrefab<MoveCommand> moveCommand = new CommandPrefab<MoveCommand>(actingObject, moveArgs);
 				commandQueue.Enqueue((ICommandPrefab)moveCommand);
@@ -45,11 +46,24 @@ public class Action {
 		}
 
 		if (currentCommand != null && currentCommand.isFinished()) {
+			if (!currentCommand.isSuccessful()){
+				Abort();
+			}
+
 			CleanCommand();
 		}
 
 		if (currentCommand == null && commandQueue.Count == 0) {
 			finished = true;
+		}
+	}
+
+	public void Abort() {
+		CleanAllCommands();
+
+		BuildCommandArgs buildArgs = args as BuildCommandArgs;
+		if (buildArgs != null) {
+			buildArgs.bluePrint.taken = false;
 		}
 	}
 
