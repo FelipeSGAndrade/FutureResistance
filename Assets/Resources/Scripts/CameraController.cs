@@ -26,14 +26,13 @@ public class CameraController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+		ApplyZoom();
+		ApplyPan();
+	}
 
+	private void ApplyZoom() {
 		bool zoomIn = Input.GetKey(KeyCode.KeypadPlus) || Input.GetKey(KeyCode.Plus);
 		bool zoomOut = Input.GetKey(KeyCode.KeypadMinus) || Input.GetKey(KeyCode.Minus);
-
-		bool up = Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W);
-		bool down = Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S);
-		bool left = Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A);
-		bool right = Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D);
 
 		if (zoomIn) {
 			currentCamera.orthographicSize = Mathf.Clamp(currentCamera.orthographicSize - 1, minOrtographicSize, maxOrtographicSize);
@@ -42,9 +41,16 @@ public class CameraController : MonoBehaviour {
 			currentCamera.orthographicSize = Mathf.Clamp(currentCamera.orthographicSize + 1, minOrtographicSize, maxOrtographicSize);
 			CalculateCameraBorders();
 		}
+	}
 
-		if(up || down || left || right){
-			
+	private void ApplyPan() {
+		bool up = Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W);
+		bool down = Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S);
+		bool left = Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A);
+		bool right = Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D);
+
+
+		if (up || down || left || right) {
 			Vector3 newPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
 
 			if (up) {
@@ -64,7 +70,6 @@ public class CameraController : MonoBehaviour {
 	}
 
 	private void CalculateCameraBorders(){
-
 		float vertExtent = currentCamera.orthographicSize;
 		float horzExtent = vertExtent * screenProportion;
 

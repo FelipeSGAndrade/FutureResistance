@@ -17,7 +17,6 @@ public class AutoTile : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
 		parentsRenderer = (SpriteRenderer)gameObject.GetComponent<SpriteRenderer>();
 
 		if(!parentsRenderer) {
@@ -62,7 +61,6 @@ public class AutoTile : MonoBehaviour {
 	}
 
 	public void UpdateState() {
-
 		if(!parentsRenderer || !updatable)
 			return;
 

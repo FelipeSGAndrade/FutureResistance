@@ -26,16 +26,28 @@ public class GameController : MonoBehaviour {
 
 		cursor = SceneHelper.InstantiateCursor(GetMousePosition());
 
-		Vector2 charPosition;
+		Vector2 firstCharPosition = GetStartingPosition();
+		UnitController firstChar = SceneHelper.InstantiateChar(firstCharPosition).GetComponent<UnitController>();
 
-		do {
-			charPosition = new Vector2(Random.Range(1, MapManager.width), Random.Range(1, MapManager.height));
-		} while(!MapManager.walkableMap[(int)charPosition.x, (int)charPosition.y]);
+		characters.Add(firstChar);
+		selectedCharacter = firstChar;
 
-		selectedCharacter = SceneHelper.InstantiateChar(charPosition).GetComponent<UnitController>();
-		characters.Add(selectedCharacter);
+		mainCamera.transform.position = new Vector3(firstCharPosition.x, firstCharPosition.y, mainCamera.transform.position.z);
+	}
 
-		mainCamera.transform.position = new Vector3(charPosition.x, charPosition.y, mainCamera.transform.position.z);
+	private Vector2 GetStartingPosition() {
+		Vector2 position = new Vector2(0, 0);
+
+		int maxTries = 100;
+		for (int i = 0; i < maxTries; i++) {
+			position = new Vector2(Random.Range(1, MapManager.width), Random.Range(1, MapManager.height));
+
+			if (MapManager.walkableMap[(int)position.x, (int)position.y]) {
+				return position;
+			}
+		}
+
+		return position;
 	}
 
 	bool isHoldingShift() {
@@ -44,7 +56,7 @@ public class GameController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update() {
-		if (Input.GetKeyDown(KeyCode.Mouse1)){
+		if (Input.GetMouseButtonDown(1)){
 			if(currentAction != 0)
 				ResetAction();
 			else
@@ -58,7 +70,7 @@ public class GameController : MonoBehaviour {
 		if (Input.GetKeyDown(KeyCode.X))
 			SetAction(3);
 
-		if(Input.GetKeyDown(KeyCode.Mouse0))
+		if(Input.GetMouseButtonDown(0))
 			ExecuteAction(isHoldingShift());
 	}
 
