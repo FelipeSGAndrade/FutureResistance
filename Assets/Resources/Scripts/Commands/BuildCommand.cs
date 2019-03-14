@@ -4,11 +4,9 @@ using UnityEngine;
 
 public class BuildCommandArgs : ICommandArgs {
 	public BluePrint bluePrint;
-	public float moveTime;
 
-	public BuildCommandArgs(BluePrint bluePrint, float moveTime) {
+	public BuildCommandArgs(BluePrint bluePrint) {
 		this.bluePrint = bluePrint;
-		this.moveTime = moveTime;
 	}
 }
 
@@ -23,19 +21,19 @@ public class BuildCommand : MonoBehaviour, ICommand {
 		mapPosition = transform.position;
 	}
 
-	public void Execute(ICommandArgs args) {
-		
+	public bool Initialize(ICommandArgs args) {
 		BuildCommandArgs commandArgs = args as BuildCommandArgs;
 		if (commandArgs == null)
 			throw new UnityException("Wrong type of args");
 
 		BluePrint bluePrint = commandArgs.bluePrint;
-
 		GameObject prefab = bluePrint.finalObjectPrefab;
 		MapManager.ReplaceObject(prefab, bluePrint.position);
 		GameController.bluePrints.Remove(bluePrint);
 
 		finished = true;
+
+		return true;
 	}
 
 	public void Stop() {

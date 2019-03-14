@@ -179,7 +179,10 @@ public class AStar {
 				int x = current.x + i;
 				int y = current.y + j;
 
-				if ((x == current.x && y == current.y) || x < 0 || y < 0 || x >= MapManager.width || y >= MapManager.height)
+				if ((x == current.x && y == current.y)
+					|| x < 0 || y < 0
+					|| x >= MapManager.width || y >= MapManager.height
+				)
 					continue;
 
 				neighbors.Add(grid[x, y]);

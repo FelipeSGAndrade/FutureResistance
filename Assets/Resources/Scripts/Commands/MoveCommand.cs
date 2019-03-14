@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class MoveCommandArgs : ICommandArgs {
 	public Vector3 destination;
-	public float moveTime;
+	public float moveTime = 0.2f;
 
 	public bool stopBefore;
 
-	public MoveCommandArgs(Vector3 destination, float moveTime, bool stopBefore = false) {
+	public MoveCommandArgs(Vector3 destination, bool stopBefore = false) {
 		this.destination = destination;
-		this.moveTime = moveTime;
 		this.stopBefore = stopBefore;
 	}
 }
@@ -32,26 +31,23 @@ public class MoveCommand : MonoBehaviour, ICommand {
 
 	private Vector3 mapPosition;
 
-	void Start() {
-		spriteRenderer = GetComponent<SpriteRenderer>();
-		animator = GetComponent<Animator>();
-
-		mapPosition = transform.position;
-
-		pathFinder = new AStar();
-	}
-
-	public void Execute(ICommandArgs args) {
-
+	public bool Initialize(ICommandArgs args) {
 		MoveCommandArgs commandArgs = args as MoveCommandArgs;
 		if (commandArgs == null)
 			throw new UnityException("Wrong type of args");
-		
+
+		animator = GetComponent<Animator>();
+		spriteRenderer = GetComponent<SpriteRenderer>();
+		mapPosition = transform.position;
+		pathFinder = new AStar();
+
 		this.destination = commandArgs.destination;
 		this.stopBefore = commandArgs.stopBefore;
 		inverseMoveTime = 1f / commandArgs.moveTime;
 
 		execute = true;
+
+		return true;
 	}
 
 	public void Stop() {
@@ -70,7 +66,8 @@ public class MoveCommand : MonoBehaviour, ICommand {
 	}
 
 	void Update() {
-		if (execute) ProcessMovement();
+		if (execute)
+			ProcessMovement();
 	}
 
 	void ProcessMovement() {
@@ -81,7 +78,6 @@ public class MoveCommand : MonoBehaviour, ICommand {
 			execute = false;
 	}
 
-	// Update is called once per frame
 	void FixedUpdate () {
 		if (pathFinder.isDone) {
 			List<Vector3> path = pathFinder.GetResult();
@@ -94,8 +90,7 @@ public class MoveCommand : MonoBehaviour, ICommand {
 		spriteRenderer.sortingOrder = Mathf.RoundToInt(transform.position.y) * -1;
 	}
 
-	private IEnumerator MovingCoordinator(Vector3[] steps)
-	{
+	private IEnumerator MovingCoordinator(Vector3[] steps) {
 		int lastStep = steps.Length;
 		if (stopBefore) lastStep--;
 

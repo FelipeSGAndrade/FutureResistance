@@ -270,7 +270,6 @@ public class MapManager
 			return;
 
 		GameObject removingObj = objectsMap[x, y];
-		Debug.Log(removingObj);
 		objectsMap[x, y] = null;
 		UnityEngine.Object.Destroy(removingObj);
 		walkableMap[x, y] = true;

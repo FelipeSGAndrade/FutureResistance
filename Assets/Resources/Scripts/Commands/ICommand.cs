@@ -1,7 +1,8 @@
-﻿
+﻿using UnityEngine;
+
 public interface ICommand {
 
-	void Execute(ICommandArgs args);
+	bool Initialize(ICommandArgs args);
 	void Stop();
 	bool isFinished();
 	bool isSuccessful();
