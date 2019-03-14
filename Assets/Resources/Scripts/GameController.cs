@@ -29,7 +29,11 @@ public class GameController : MonoBehaviour {
 		Vector2 firstCharPosition = GetStartingPosition();
 		UnitController firstChar = SceneHelper.InstantiateChar(firstCharPosition).GetComponent<UnitController>();
 
+		Vector2 secondCharPosition = GetStartingPosition();
+		UnitController secondChar = SceneHelper.InstantiateChar(secondCharPosition).GetComponent<UnitController>();
+
 		characters.Add(firstChar);
+		characters.Add(secondChar);
 		selectedCharacter = firstChar;
 
 		mainCamera.transform.position = new Vector3(firstCharPosition.x, firstCharPosition.y, mainCamera.transform.position.z);
@@ -82,7 +86,7 @@ public class GameController : MonoBehaviour {
 		Vector3 position = GetGridMousePosition();
 
 		if(position != Vector3.back) {
-			selectedCharacter.SetMovement(position, clearCommands);
+			TaskManager.AddTask(new MoveTask(position));
 		}
 	}
 
@@ -139,12 +143,7 @@ public class GameController : MonoBehaviour {
 			case 1:
 				if(position != Vector3.back) {
 					Sprite buildingSprite = ((SpriteRenderer)cursor.GetComponent<SpriteRenderer>()).sprite;
-					GameObject bluePrintObject = MapManager.CreateObject((GameObject)Resources.Load("Prefabs/Blueprint"), position, buildingSprite, false);
-
-					BluePrint bluePrint = bluePrintObject.GetComponent<BluePrint>();
-					bluePrint.finalObjectPrefab = (GameObject)Resources.Load("Prefabs/Wall");
-					bluePrint.position = position;
-					bluePrints.Add(bluePrint);
+					TaskManager.AddTask(new BuildTask(position, buildingSprite));
 				}
 				break;
 			case 2:

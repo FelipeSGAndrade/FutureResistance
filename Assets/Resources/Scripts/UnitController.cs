@@ -4,77 +4,40 @@ using System.Collections.Generic;
 
 public class UnitController : MonoBehaviour {
 
-	public float moveTime = 0.2f;
-
 	private Vector3 mapPosition;
 
-	private Action currentAction = null;
-	private Queue<Action> actionQueue = new Queue<Action>();
+	private Task currentTask = null;
 
 	// Use this for initialization
 	void Start () {
-
 		mapPosition = transform.position;
 	}
 
-	bool isIdle() {
-		return currentAction == null;
-	}
-
-	bool hasActions() {
-		return actionQueue.Count > 0;
-	}
-
-	bool isDone() {
-		return currentAction.IsFinished();
-	}
-
-	bool bluePrintsAvailable() {
-		return GameController.bluePrints.Count > 0;
+	bool IsIdle() {
+		return currentTask == null;
 	}
 
 	void Update() {
-
-		if (isIdle() && hasActions()) {
-			currentAction = actionQueue.Dequeue();	
+		if (!IsIdle() && currentTask.IsDone()) {
+			TaskManager.FinishTask(currentTask);
+			currentTask = null;
 		}
 
-		if (!isIdle() && isDone()) {
-			currentAction = null;
+		if (!IsIdle()) {
+			bool taskOk = currentTask.Update(gameObject);
+
+			if (!taskOk) {
+				Abort();
+			}
 		}
 
-		if (!isIdle()) {
-			currentAction.Update();
-		}
-
-		if (isIdle() && !hasActions() && bluePrintsAvailable()) {
-			BluePrint bluePrint = GameController.bluePrints.Find(nextBluePrint => !nextBluePrint.taken);
-			SetBuildAction(bluePrint, true);
+		if (IsIdle()) {
+			currentTask = TaskManager.GetNextTask();
 		}
 	}
-	
-	public void SetMovement(Vector3 destination, bool clearActions)
-	{
-		if (clearActions) CleanAllActions();
 
-		Action newAction = new Action(gameObject, ActionEnum.MOVE, new MoveCommandArgs(destination, moveTime));
-		actionQueue.Enqueue(newAction);
-	}
-
-	public void SetBuildAction(BluePrint bluePrint, bool clearActions)
-	{
-		if (clearActions) CleanAllActions();
-
-		bluePrint.taken = true;
-		Action newAction = new Action(gameObject, ActionEnum.BUILD, new BuildCommandArgs(bluePrint, moveTime));
-		actionQueue.Enqueue(newAction);
-	}
-
-	private void CleanAllActions()
-	{
-		actionQueue.Clear();
-		if (currentAction != null) {
-			currentAction.CleanAllCommands();
-		}
+	private void Abort() {
+		TaskManager.ReturnTask(currentTask);
+		currentTask = null;
 	}
 }
