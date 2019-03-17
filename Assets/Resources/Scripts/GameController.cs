@@ -14,9 +14,6 @@ public class GameController : MonoBehaviour {
 	private GameObject cursor;
 	private int currentAction = 0;
 
-	public static List<BluePrint> bluePrints = new List<BluePrint>();
-
-	// Use this for initialization
 	void Start () {
 		SceneHelper = GetComponent<AssetsHolder>();
 		mainCamera = Camera.main;
