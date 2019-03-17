@@ -29,8 +29,6 @@ public class MoveCommand : MonoBehaviour, ICommand {
 	private IEnumerator movingCoroutine = null;
 	private IEnumerator smoothMovementCoroutine = null;
 
-	private Vector3 mapPosition;
-
 	public bool Initialize(ICommandArgs args) {
 		MoveCommandArgs commandArgs = args as MoveCommandArgs;
 		if (commandArgs == null)
@@ -38,7 +36,6 @@ public class MoveCommand : MonoBehaviour, ICommand {
 
 		animator = GetComponent<Animator>();
 		spriteRenderer = GetComponent<SpriteRenderer>();
-		mapPosition = transform.position;
 		pathFinder = new AStar();
 
 		this.destination = commandArgs.destination;
