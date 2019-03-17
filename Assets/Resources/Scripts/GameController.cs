@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class GameController : MonoBehaviour {
 
-	public UnitController selectedCharacter;
-	public List<UnitController> characters;
+	public GameObject selectedCharacter;
+	public List<GameObject> characters;
 
 	private AssetsHolder SceneHelper;
 	private MapManager mapManager;
@@ -27,10 +27,10 @@ public class GameController : MonoBehaviour {
 		cursor = SceneHelper.InstantiateCursor(GetMousePosition());
 
 		Vector2 firstCharPosition = GetStartingPosition();
-		UnitController firstChar = SceneHelper.InstantiateChar(firstCharPosition).GetComponent<UnitController>();
+		GameObject firstChar = SceneHelper.InstantiateChar(firstCharPosition);
 
 		Vector2 secondCharPosition = GetStartingPosition();
-		UnitController secondChar = SceneHelper.InstantiateChar(secondCharPosition).GetComponent<UnitController>();
+		GameObject secondChar = SceneHelper.InstantiateChar(secondCharPosition);
 
 		characters.Add(firstChar);
 		characters.Add(secondChar);
@@ -58,7 +58,6 @@ public class GameController : MonoBehaviour {
 		return Input.GetKey(KeyCode.LeftShift);
 	}
 	
-	// Update is called once per frame
 	void Update() {
 		if (Input.GetMouseButtonDown(1)){
 			if(currentAction != 0)
@@ -67,8 +66,6 @@ public class GameController : MonoBehaviour {
 				MoveCharacter(!isHoldingShift());
 		}
 
-		if (Input.GetKeyDown(KeyCode.Q))
-			SetAction(1);
 		if (Input.GetKeyDown(KeyCode.E))
 			SetAction(2);
 		if (Input.GetKeyDown(KeyCode.X))
@@ -109,7 +106,7 @@ public class GameController : MonoBehaviour {
 		return Vector3.back;
 	}
 
-	void SetAction(int action) {
+	public void SetAction(int action) {
 		if(action == currentAction) {
 			ResetAction();
 			return;
@@ -139,6 +136,7 @@ public class GameController : MonoBehaviour {
 	void ExecuteAction(bool keepAction) {
 		Vector3 position = GetGridMousePosition();
 		bool resetWhenDone = keepAction;
+
 		switch(currentAction) {
 			case 1:
 				if(position != Vector3.back) {
