@@ -14,14 +14,24 @@ public class Step {
 }
 
 public abstract class Task {
-    public bool taken = false;
-    public TaskType type;
+    protected TaskType type;
+    public TaskType Type { get { return type; } }
+    public bool Taken { get; set; }
+    protected bool aborted = false;
+    public bool Aborted { get { return aborted; } }
 
 	protected List<Step> stepList = new List<Step>();
-
     private ICommand currentCommand;
     private Step currentStep;
-    private bool done;
+    private bool done = false;
+
+    public override string ToString() {
+        return "Type: " + Type + " taken:" + Taken;
+    }
+
+    public static implicit operator bool(Task exists) {
+        return exists != null;
+    }
 
     public bool Update(GameObject unit) {
 		if (currentCommand == null) {

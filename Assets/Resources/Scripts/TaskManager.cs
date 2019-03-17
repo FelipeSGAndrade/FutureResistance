@@ -7,17 +7,15 @@ public class TaskManager {
 	private static List<Task> taskList = new List<Task>();
 
 	public static Task GetNextTask() {
-		Task next = taskList.Find(task => !task.taken);
+		Task next = taskList.Find(task => !task.Taken);
 
-		if (next != null) {
-			next.taken = true;
-		}
+		if (next) next.Taken = true;
 
 		return next;
 	}
 
 	public static void AddTask(Task task) {
-		taskList.Add(task);
+		if(!task.Aborted) taskList.Add(task);
 	}
 
 	public static void FinishTask(Task task) {
@@ -25,6 +23,6 @@ public class TaskManager {
 	}
 
 	public static void ReturnTask(Task task) {
-		task.taken = false;
+		task.Taken = false;
 	}
 }

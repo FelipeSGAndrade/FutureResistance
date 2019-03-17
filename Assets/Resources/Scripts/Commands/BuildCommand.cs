@@ -12,14 +12,7 @@ public class BuildCommandArgs : ICommandArgs {
 
 public class BuildCommand : MonoBehaviour, ICommand {
 
-	private Vector3 position = Vector3.back;
 	private bool finished = false;
-
-	private Vector3 mapPosition;
-
-	void Start() {
-		mapPosition = transform.position;
-	}
 
 	public bool Initialize(ICommandArgs args) {
 		BuildCommandArgs commandArgs = args as BuildCommandArgs;

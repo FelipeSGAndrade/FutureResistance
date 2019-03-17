@@ -10,12 +10,21 @@ public class BuildTask : Task {
 		type = TaskType.BUILD;
 		BluePrint bluePrint = CreateBuildBlueprint(targetPosition, buildingSprite);
 
+		if (!bluePrint) {
+			aborted = true;
+			return;
+		}
+
 		AddMoveCommand(targetPosition);
 		AddBuildCommand(bluePrint);
 	}
 
 	private BluePrint CreateBuildBlueprint(Vector2 targetPosition, Sprite buildingSprite) {
 		bluePrintObject = MapManager.CreateObject((GameObject)Resources.Load("Prefabs/Blueprint"), targetPosition, buildingSprite);
+		if(!bluePrintObject) {
+			Debug.Log("Cant build there");
+			return null;
+		}
 
 		BluePrint bluePrint = bluePrintObject.GetComponent<BluePrint>();
 		bluePrint.finalObjectPrefab = (GameObject)Resources.Load("Prefabs/Wall");

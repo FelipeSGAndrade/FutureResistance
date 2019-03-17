@@ -4,14 +4,7 @@ using System.Collections.Generic;
 
 public class UnitController : MonoBehaviour {
 
-	private Vector3 mapPosition;
-
 	private Task currentTask = null;
-
-	// Use this for initialization
-	void Start () {
-		mapPosition = transform.position;
-	}
 
 	bool IsIdle() {
 		return currentTask == null;
