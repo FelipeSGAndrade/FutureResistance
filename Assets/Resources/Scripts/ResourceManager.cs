@@ -9,7 +9,7 @@ public enum ResourceType {
 public class ResourceManager : MonoBehaviour {
 
 	private Dictionary<ResourceType, int> amounts = new Dictionary<ResourceType, int>();
-	private Dictionary<ResourceType, 
+	// private Dictionary<ResourceType, 
 
-	public 
+	// public 
 }
