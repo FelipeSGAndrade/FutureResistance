@@ -42,8 +42,6 @@ public class BuildCommand : MonoBehaviour, ICommand {
 
 		float newAlpha = (1f / buildNeededTicks) * buildTicks;
 		spriteRenderer.color = new Color(1, 1, 1, newAlpha);
-
-		Debug.Log("Build " + buildTicks + " alpha " + newAlpha);
 	}
 
 	void Build() {
