@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MoveCommandArgs : ICommandArgs {
 	public Vector3 destination;
-	public float moveTime = 0.2f;
+	public float moveTime = 0.5f;
 
 	public bool stopBefore;
 

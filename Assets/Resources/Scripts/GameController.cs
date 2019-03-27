@@ -25,12 +25,12 @@ public class GameController : MonoBehaviour {
 
 		Vector2 firstCharPosition = GetStartingPosition();
 		GameObject firstChar = SceneHelper.InstantiateChar(firstCharPosition);
-
-		Vector2 secondCharPosition = GetStartingPosition();
-		GameObject secondChar = SceneHelper.InstantiateChar(secondCharPosition);
-
 		characters.Add(firstChar);
-		characters.Add(secondChar);
+
+		// Vector2 secondCharPosition = GetStartingPosition();
+		// GameObject secondChar = SceneHelper.InstantiateChar(secondCharPosition);
+		// characters.Add(secondChar);
+
 		selectedCharacter = firstChar;
 
 		mainCamera.transform.position = new Vector3(firstCharPosition.x, firstCharPosition.y, mainCamera.transform.position.z);
