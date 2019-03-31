@@ -14,7 +14,7 @@ public class BuildCommand : MonoBehaviour, ICommand {
 
 	private bool finished = false;
 	private bool successful = false;
-	private int buildNeededTicks = 10;
+	private int buildNeededTicks = 5;
 	private int buildTicks;
 	BluePrint bluePrint;
 	Vector2 position;
@@ -50,8 +50,8 @@ public class BuildCommand : MonoBehaviour, ICommand {
 		buildTicks++;
 		UpdateSprite();
 		if (buildTicks >= buildNeededTicks) {
-			FinishBuilding();
 			TickSystem.Unsubscribe(Build);
+			FinishBuilding();
 		}
 	}
 

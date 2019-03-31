@@ -21,6 +21,7 @@ public class AStar {
 
 	private Vector3 origin;
 	private Vector3 destination;
+	private bool stopBefore;
 
 	public bool isDone {
 		get {
@@ -52,7 +53,7 @@ public class AStar {
 		}
 	}
 
-	public bool FindPathAsync(Vector3 origin, Vector3 destination)
+	public bool FindPathAsync(Vector3 origin, Vector3 destination, bool stopBefore = false)
 	{
 		lock (working_lock) {
 			if (working) {
@@ -63,6 +64,7 @@ public class AStar {
 
 		this.origin = origin;
 		this.destination = destination;
+		this.stopBefore = stopBefore;
 
 		thread = new Thread(FindPath);
 		thread.Start();
@@ -77,8 +79,16 @@ public class AStar {
 		}
 
 		if (!MapManager.walkableMap[(int)destination.x, (int)destination.y]) {
-			Finish(null);
-			return;
+			if (stopBefore) {
+				if (!WalkableNeighbors()) {
+					Finish(null);
+					return;
+				}
+			}
+			else {
+				Finish(null);
+				return;
+			}
 		}
 
 		bool pathFound = false;
@@ -116,9 +126,10 @@ public class AStar {
 				float cost = 1;
 
 				if (neighbor.x != current.x && neighbor.y != current.y)
-					cost = 1.5f;
+					cost = Mathf.Infinity;
 
-				if (closedList.Contains(neighbor) || !MapManager.walkableMap[neighbor.x, neighbor.y])
+				if ((closedList.Contains(neighbor) || !MapManager.walkableMap[neighbor.x, neighbor.y])
+					&& (!stopBefore || neighbor.x != destination.x || neighbor.y != destination.y))
 					continue;
 				else if (openList.Contains(neighbor)) {
 					if (neighbor.f <= (neighbor.h + current.g + cost))
@@ -200,6 +211,21 @@ public class AStar {
 				break;
 			}
 		}
+	}
+
+	private bool WalkableNeighbors() {
+		int x = (int)destination.x;
+		int y = (int)destination.y;
+		bool[,] walkableMap = MapManager.walkableMap;
+
+		return walkableMap[x - 1, y]
+			|| walkableMap[x - 1, y - 1]
+			|| walkableMap[x, y - 1]
+			|| walkableMap[x + 1, y - 1]
+			|| walkableMap[x + 1, y]
+			|| walkableMap[x + 1, y + 1]
+			|| walkableMap[x, y + 1]
+			|| walkableMap[x - 1, y + 1];
 	}
 
 	private void Finish(List<Vector3> path)

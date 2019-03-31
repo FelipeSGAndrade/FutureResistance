@@ -14,11 +14,5 @@ public class ResourceUI : MonoBehaviour
     void Update()
     {
         textComponent.text = ResourceType.WOOD + ": " + ResourceManager.GetAmount(ResourceType.WOOD);
-
-        elapsedTime += Time.deltaTime;
-        if (elapsedTime >= timeForResource) {
-            ResourceManager.AddResource(ResourceType.WOOD, 1);
-            elapsedTime = 0;
-        }
     }
 }

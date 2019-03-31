@@ -1,4 +1,5 @@
 public enum TaskType {
     MOVE,
-    BUILD
+    BUILD,
+    CHOP
 }

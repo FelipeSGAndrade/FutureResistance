@@ -6,28 +6,22 @@ using UnityEngine;
 public class AutoTile : MonoBehaviour {
 
 	private int currentTileValue = 0;
-	private bool updatable = true;
-	private SpriteRenderer parentsRenderer;
+	private SpriteRenderer spriteRenderer;
 	public Texture2D texture;
-
-	[NonSerialized]
-	public Sprite defaultSprite;
+	public string tileTag;
+	public bool floor;
 
 	UnityEngine.Object[] sortedTiles;
 
 	// Use this for initialization
 	void Start () {
-		parentsRenderer = (SpriteRenderer)gameObject.GetComponent<SpriteRenderer>();
+		spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
 
-		if(!parentsRenderer) {
-			updatable = false;
-			return;
+		if(!spriteRenderer) {
+            throw new UnityException("Auto Tile needs a sprite renderer");
 		}
 
-		defaultSprite = parentsRenderer.sprite;
-
 		UnityEngine.Object[] tiles = Resources.LoadAll("Sprites/" + texture.name);
-
 		sortedTiles = new UnityEngine.Object[16];
 
 		sortedTiles[0] = tiles[16];	
@@ -57,11 +51,22 @@ public class AutoTile : MonoBehaviour {
 			return border;
 		}
 
-		return MapManager.objectsMap[x, y];
+		if (floor) return MapManager.floorTiles[x, y];
+		else return MapManager.objectsMap[x, y];
+	}
+
+	private bool CompareNeighbor(int x, int y) {
+		GameObject neighbor = getNeighbor(x, y);
+		if (!neighbor) return false;
+
+		AutoTile neighborAutoTile = neighbor.GetComponent<AutoTile>();
+		if (!neighborAutoTile) return false;
+
+		return neighborAutoTile.tileTag == tileTag;
 	}
 
 	public void UpdateState() {
-		if(!parentsRenderer || !updatable)
+		if(!spriteRenderer)
 			return;
 
 		int x = (int)transform.position.x;
@@ -69,30 +74,26 @@ public class AutoTile : MonoBehaviour {
 
 		int tileValue = 0;
 
-		GameObject neighbor = getNeighbor(x, y + 1);				
-		if (neighbor != null && neighbor.CompareTag(tag)) {
+		if(CompareNeighbor(x, y + 1)) {
 			tileValue += 1;
 		}
 
-		neighbor = getNeighbor(x - 1, y);
-		if (neighbor != null && neighbor.CompareTag(tag)) {
+		if (CompareNeighbor(x - 1, y)) {
 			tileValue += 2;
 		}
 
-		neighbor = getNeighbor(x, y - 1);
-		if (neighbor != null && neighbor.CompareTag(tag)) {
+		if (CompareNeighbor(x, y - 1)) {
 			tileValue += 8;
 		}
 
-		neighbor = getNeighbor(x + 1, y);
-		if (neighbor != null && neighbor.CompareTag(tag)) {
+		if (CompareNeighbor(x + 1, y)) {
 			tileValue += 4;
 		}
 
 		if(tileValue == currentTileValue)
 			return;
 
-		parentsRenderer.sprite = (Sprite)sortedTiles[tileValue];
+		spriteRenderer.sprite = (Sprite)sortedTiles[tileValue];
 
 		currentTileValue = tileValue;
 		MapManager.NotificateChangeFrom(x, y);

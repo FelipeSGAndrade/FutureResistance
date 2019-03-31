@@ -12,7 +12,7 @@ public class MapManager
 	public static bool[,] walkableMap;
 
 	public static GameObject[,] objectsMap;
-	public GameObject[,] floorTiles;
+	public static GameObject[,] floorTiles;
 
 	[NonSerialized]
 	public Transform mapHolder;

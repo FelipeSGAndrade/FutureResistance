@@ -6,25 +6,21 @@ using UnityEngine;
 public class TickSystem : MonoBehaviour {
 
 	static TickSystem instance;
-	static TickSystem Instance {
-		get {
-			if (!instance) {
-				GameObject tickObject = new GameObject("TickSystem");
-				instance = tickObject.AddComponent<TickSystem>();
-			}
+	static TickSystem Instance { get { return instance; } }
 
-			return instance;
-		}
+	public void Awake() {
+		instance = this;
 	}
 
 	private List<Action> onTickActions = new List<Action>();
+	private List<Action> removeList = new List<Action>();
 
 	public static void Subscribe(Action subscriberAction) {
 		Instance.onTickActions.Add(subscriberAction);
 	}
 
 	public static void Unsubscribe(Action subscriberAction) {
-		Instance.onTickActions.Remove(subscriberAction);
+		Instance.removeList.Add(subscriberAction);
 	}
 	
 	private float timeToNextTick;
@@ -40,5 +36,7 @@ public class TickSystem : MonoBehaviour {
 
 	void ExecuteActions() {
 		onTickActions.ForEach(action => action());
+		removeList.ForEach(action => onTickActions.Remove(action));
+		removeList.Clear();
 	}
 }

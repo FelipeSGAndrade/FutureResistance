@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
-public class GameController : MonoBehaviour {
+public class GameManager : MonoBehaviour {
 
 	public GameObject selectedCharacter;
 	public List<GameObject> characters;
+	public int charQuantity;
 
 	private AssetsHolder SceneHelper;
 	private MapManager mapManager;
@@ -23,17 +25,19 @@ public class GameController : MonoBehaviour {
 
 		cursor = SceneHelper.InstantiateCursor(GetMousePosition());
 
-		Vector2 firstCharPosition = GetStartingPosition();
-		GameObject firstChar = SceneHelper.InstantiateChar(firstCharPosition);
-		characters.Add(firstChar);
+		for (int i = 0; i < charQuantity; i++) {
+			createCharacter();
+		}
 
-		// Vector2 secondCharPosition = GetStartingPosition();
-		// GameObject secondChar = SceneHelper.InstantiateChar(secondCharPosition);
-		// characters.Add(secondChar);
+		selectedCharacter = characters[0];
+		Vector2 charPosition = characters[0].transform.position;
+		mainCamera.transform.position = new Vector3(charPosition.x, charPosition.y, mainCamera.transform.position.z);
+	}
 
-		selectedCharacter = firstChar;
-
-		mainCamera.transform.position = new Vector3(firstCharPosition.x, firstCharPosition.y, mainCamera.transform.position.z);
+	void createCharacter() {
+		Vector2 position = GetStartingPosition();
+		GameObject character = SceneHelper.InstantiateChar(position);
+		characters.Add(character);
 	}
 
 	private Vector2 GetStartingPosition() {
@@ -68,12 +72,14 @@ public class GameController : MonoBehaviour {
 		if (Input.GetKeyDown(KeyCode.X))
 			SetAction(3);
 
-		if(Input.GetMouseButtonDown(0))
-			ExecuteAction(isHoldingShift());
+		if(Input.GetMouseButtonDown(0)) {
+			if(!EventSystem.current.IsPointerOverGameObject())
+				ExecuteAction(isHoldingShift());
+		}
 	}
 
 	void FixedUpdate() {
-		cursor.transform.position = GetMousePosition();
+		cursor.transform.position = GetGridMousePosition();
 	}
 
 	void MoveCharacter(bool clearCommands) {
@@ -119,6 +125,7 @@ public class GameController : MonoBehaviour {
 				break;
 
 			case 3:
+			case 4:
 				Sprite cancelSprite = (Sprite)(Resources.LoadAll ("Sprites/Z18-TileA5"))[10];
 				((SpriteRenderer)cursor.GetComponent<SpriteRenderer> ()).sprite = cancelSprite;
 				break;
@@ -132,25 +139,26 @@ public class GameController : MonoBehaviour {
 
 	void ExecuteAction(bool keepAction) {
 		Vector3 position = GetGridMousePosition();
+		if (position == Vector3.back) return;
+
 		bool resetWhenDone = keepAction;
 
 		switch(currentAction) {
 			case 1:
-				if(position != Vector3.back) {
-					Sprite buildingSprite = ((SpriteRenderer)cursor.GetComponent<SpriteRenderer>()).sprite;
-					TaskManager.AddTask(new BuildTask(position, buildingSprite));
-				}
+				Sprite buildingSprite = ((SpriteRenderer)cursor.GetComponent<SpriteRenderer>()).sprite;
+				TaskManager.AddTask(new BuildTask(position, buildingSprite));
 				break;
 			case 2:
-				if(position != Vector3.back) {
-					MapManager.CreateObject((GameObject)Resources.Load("Prefabs/Wall"), position);
-				}
+				MapManager.CreateObject((GameObject)Resources.Load("Prefabs/Wall"), position);
 				break;
 			case 3:
-				if (position != Vector3.back) {
-					MapManager.DeleteObject(position);
-					resetWhenDone = false;
-				}
+				MapManager.DeleteObject(position);
+				resetWhenDone = false;
+				break;
+			case 4:
+				ChopTask task = ChopTask.Create(position);
+				if (task)
+					TaskManager.AddTask(task);
 				break;
 		}
 

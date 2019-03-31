@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MoveCommandArgs : ICommandArgs {
 	public Vector3 destination;
-	public float moveTime = 0.5f;
+	public float moveTime = 0.2f;
 
 	public bool stopBefore;
 
@@ -52,6 +52,7 @@ public class MoveCommand : MonoBehaviour, ICommand {
 			StopCoroutine(movingCoroutine);
 
 		finished = true;
+		successful = false;
 	}
 
 	public bool isFinished() {
@@ -71,7 +72,7 @@ public class MoveCommand : MonoBehaviour, ICommand {
 		if (movingCoroutine != null)
 			StopCoroutine(movingCoroutine);
 
-		if (pathFinder.FindPathAsync(transform.position, destination))
+		if (pathFinder.FindPathAsync(transform.position, destination, stopBefore))
 			execute = false;
 	}
 
@@ -81,6 +82,9 @@ public class MoveCommand : MonoBehaviour, ICommand {
 			if (path != null) {
 				movingCoroutine = MovingCoordinator(path.ToArray());
 				StartCoroutine(movingCoroutine);
+			} else {
+				Stop();
+				return;
 			}
 		}
 
@@ -100,7 +104,6 @@ public class MoveCommand : MonoBehaviour, ICommand {
 
 			if (!MapManager.walkableMap[(int)step.x, (int)step.y]) {
 				Stop();
-				successful = false;
 				yield break;
 			}
 
