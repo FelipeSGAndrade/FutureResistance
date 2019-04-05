@@ -46,13 +46,13 @@ public class AutoTile : MonoBehaviour {
 
 	public GameObject getNeighbor(int x, int y) {
 		if (x < 0 || y < 0 || x >= MapManager.width || y >= MapManager.height) {
-			GameObject border = new GameObject();
-			border.tag = tag;
-			return border;
+			return gameObject;
 		}
 
-		if (floor) return MapManager.floorTiles[x, y];
-		else return MapManager.objectsMap[x, y];
+		Node node = MapManager.nodeMap[x, y];
+
+		if (floor) return node.GetFloor();
+		else return node.GetBlock();
 	}
 
 	private bool CompareNeighbor(int x, int y) {

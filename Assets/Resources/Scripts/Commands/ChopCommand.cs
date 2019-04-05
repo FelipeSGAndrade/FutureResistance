@@ -29,7 +29,7 @@ public class ChopCommand : MonoBehaviour, ICommand {
 		}
 
 		position = commandArgs.targetPosition;
-		tree = MapManager.objectsMap[(int)position.x, (int)position.y];
+		tree = MapManager.nodeMap[(int)position.x, (int)position.y].GetBlock();
 		if (!tree) {
 			Stop();
 			Debug.Log("No tree to chop");

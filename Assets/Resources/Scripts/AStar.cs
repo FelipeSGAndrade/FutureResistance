@@ -92,12 +92,12 @@ public class AStar {
 		}
 
 		bool pathFound = false;
-		Node[,] grid = CreateGrid();
-		List<Node> closedList = new List<Node>();
-		List<Node> openList = new List<Node>();
+		Waypoint[,] grid = CreateGrid();
+		List<Waypoint> closedList = new List<Waypoint>();
+		List<Waypoint> openList = new List<Waypoint>();
 
-		Node start = grid[(int)origin.x, (int)origin.y];
-		Node current = start;
+		Waypoint start = grid[(int)origin.x, (int)origin.y];
+		Waypoint current = start;
 		openList.Add(current);
 
 		while (openList.Count > 0) {
@@ -119,10 +119,10 @@ public class AStar {
 				break;
 			}
 
-			Node[] neighbors = GetNeighbors(grid, current);
+			Waypoint[] neighbors = GetNeighbors(grid, current);
 
 			for (int i = 0; i < neighbors.Length; i++) {
-				Node neighbor = neighbors[i];
+				Waypoint neighbor = neighbors[i];
 				float cost = 1;
 
 				if (neighbor.x != current.x && neighbor.y != current.y)
@@ -168,22 +168,22 @@ public class AStar {
 		Finish(steps);
 	}
 
-	private Node[,] CreateGrid()
+	private Waypoint[,] CreateGrid()
 	{
-		Node[,] grid = new Node[MapManager.height, MapManager.width];
+		Waypoint[,] grid = new Waypoint[MapManager.height, MapManager.width];
 
 		for (int x = 0; x < MapManager.height; x++) {
 			for (int y = 0; y < MapManager.width; y++) {
-				grid[x, y] = new Node(x, y);
+				grid[x, y] = new Waypoint(x, y);
 			}
 		}
 
 		return grid;
 	}
 
-	private Node[] GetNeighbors(Node[,] grid, Node current)
+	private Waypoint[] GetNeighbors(Waypoint[,] grid, Waypoint current)
 	{
-		List<Node> neighbors = new List<Node>();
+		List<Waypoint> neighbors = new List<Waypoint>();
 
 		for (int i = -1; i <= 1; i++) {
 			for (int j = -1; j <= 1; j++) {
@@ -203,7 +203,7 @@ public class AStar {
 		return neighbors.ToArray();
 	}
 
-	private void AddToOpenList(Node neighbor, List<Node> openList)
+	private void AddToOpenList(Waypoint neighbor, List<Waypoint> openList)
 	{
 		for (int i = 0; i <= openList.Count; i++) {
 			if (i == openList.Count || openList[i].f >= neighbor.f) {

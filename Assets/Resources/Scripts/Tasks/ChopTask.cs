@@ -5,7 +5,7 @@ using UnityEngine;
 public class ChopTask : Task {
 
 	private ChopTask(Vector2 targetPosition) {
-		GameObject tree = MapManager.objectsMap[(int)targetPosition.x, (int)targetPosition.y];
+		GameObject tree = MapManager.nodeMap[(int)targetPosition.x, (int)targetPosition.y].GetBlock();
 		if (!tree) {
 			return;
 		}
@@ -16,7 +16,7 @@ public class ChopTask : Task {
 	}
 
 	public static ChopTask Create(Vector2 targetPosition) {
-		GameObject tree = MapManager.objectsMap[(int)targetPosition.x, (int)targetPosition.y];
+		GameObject tree = MapManager.nodeMap[(int)targetPosition.x, (int)targetPosition.y].GetBlock();
 		if (!tree || !tree.name.Contains("Tree")) {
 			return null;
 		}

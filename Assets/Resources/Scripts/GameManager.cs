@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour {
 	public List<GameObject> characters;
 	public int charQuantity;
 
-	private AssetsHolder SceneHelper;
 	private MapManager mapManager;
 	private Camera mainCamera;
 
@@ -17,11 +16,10 @@ public class GameManager : MonoBehaviour {
 	private int currentAction = 0;
 
 	void Start () {
-		SceneHelper = GetComponent<AssetsHolder>();
 		mainCamera = Camera.main;
 
 		mapManager = new MapManager();
-		mapManager.InitializeMap(SceneHelper);
+		mapManager.InitializeMap();
 
 		cursor = SceneHelper.InstantiateCursor(GetMousePosition());
 

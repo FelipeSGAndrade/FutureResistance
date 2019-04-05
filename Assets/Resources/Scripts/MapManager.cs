@@ -11,16 +11,13 @@ public class MapManager
 	public static TerrainEnum[,] terrainMap;
 	public static bool[,] walkableMap;
 
-	public static GameObject[,] objectsMap;
-	public static GameObject[,] floorTiles;
+	public static Node[,] nodeMap;
 
-	[NonSerialized]
-	public Transform mapHolder;
-	[NonSerialized]
-	public static AssetsHolder SceneHelper;
+	private Transform mapHolder;
 
-	public void InitializeMap(AssetsHolder sceneHelper) {
-		SceneHelper = sceneHelper;
+	private float scale = 5f;
+
+	public void InitializeMap() {
 		InitialiseList();
 		Generate();
 		Build();
@@ -29,71 +26,40 @@ public class MapManager
 	void InitialiseList() {
 		terrainMap = new TerrainEnum[width, height];
 		walkableMap = new bool[width, height];
-		objectsMap = new GameObject[width, height];
-		floorTiles = new GameObject[width, height];
+		nodeMap = new Node[width, height];
 	}
 
 	void Generate() {
-		TerrainEnum lastTile = TerrainEnum.NONE;
+		float offsetX = Random.Range(0f, 999999f);
+		float offsetY = Random.Range(0f, 999999f);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				TerrainEnum[] chances = GetChances(x, y, lastTile);
-				terrainMap[x, y] = chances[Random.Range(0, chances.Length)];
-				lastTile = terrainMap[x, y];
+				terrainMap[x, y] = CalculateTerrain(x, y, offsetX, offsetY);
+				walkableMap[x, y] = Walkable(terrainMap[x, y]);
 			}
 		}
-
-		PostGeneration();
-		PostGeneration();
 
 		CreateResources();
 	}
 
-	private bool Walkable(TerrainEnum terrain) {
-		return terrain != TerrainEnum.ROCK && terrain != TerrainEnum.TREE;
+	TerrainEnum CalculateTerrain(int x, int y, float offsetX, float offsetY) {
+		float xCoord = (float)x / width * scale + offsetX;
+		float yCoord = (float)y / height * scale + offsetY;
+
+		float sample = Mathf.PerlinNoise(xCoord, yCoord);
+		if (sample > 0.6) {
+			return TerrainEnum.ROCK;
+		}
+
+		if (sample > 0.55) {
+			return TerrainEnum.ROCKFLOOR;
+		}
+
+		return TerrainEnum.GRASS;
 	}
 
-	void PostGeneration() {
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-
-				TerrainEnum t1 = GetTerrainAtPosition(x, y + 1);
-				TerrainEnum t2 = GetTerrainAtPosition(x, y - 1);
-				TerrainEnum t3 = GetTerrainAtPosition(x + 1, y);
-				TerrainEnum t4 = GetTerrainAtPosition(x - 1, y);
-
-				if ((t1 == TerrainEnum.GRASS || t1 == TerrainEnum.NONE) &&
-					(t2 == TerrainEnum.GRASS || t2 == TerrainEnum.NONE) &&
-					(t3 == TerrainEnum.GRASS || t3 == TerrainEnum.NONE) &&
-					(t4 == TerrainEnum.GRASS || t4 == TerrainEnum.NONE))
-				{
-					terrainMap[x, y] = TerrainEnum.GRASS;
-				} 
-				else if ((t1 == TerrainEnum.ROCK || t1 == TerrainEnum.ROCKFLOOR || t1 == TerrainEnum.NONE) &&
-						(t2 == TerrainEnum.ROCK || t2 == TerrainEnum.ROCKFLOOR || t2 == TerrainEnum.NONE) &&
-						(t3 == TerrainEnum.ROCK || t3 == TerrainEnum.ROCKFLOOR || t3 == TerrainEnum.NONE) &&
-						(t4 == TerrainEnum.ROCK || t4 == TerrainEnum.ROCKFLOOR || t4 == TerrainEnum.NONE))
-				{
-					terrainMap[x, y] = TerrainEnum.ROCK;
-				} 
-
-				if((terrainMap[x,y] == TerrainEnum.ROCKFLOOR || terrainMap[x,y] == TerrainEnum.ROCK) &&
-						t1 != TerrainEnum.ROCK && t2 != TerrainEnum.ROCK && t3 != TerrainEnum.ROCK && t4 != TerrainEnum.ROCK)
-				{
-					terrainMap[x, y] = TerrainEnum.GRASS;
-				}
-				else if(terrainMap[x,y] == TerrainEnum.GRASS &&
-					(t1 == TerrainEnum.ROCK || t2 == TerrainEnum.ROCK || t3 == TerrainEnum.ROCK || t4 == TerrainEnum.ROCK))
-				{
-					terrainMap[x, y] = TerrainEnum.ROCKFLOOR;
-				}
-
-				if (Walkable(terrainMap[x, y]))
-					walkableMap[x, y] = true;
-				else
-					walkableMap[x, y] = false;
-			}
-		}
+	private bool Walkable(TerrainEnum terrain) {
+		return terrain != TerrainEnum.ROCK && terrain != TerrainEnum.TREE;
 	}
 
 	void CreateResources() {
@@ -120,48 +86,6 @@ public class MapManager
 		}
 	}
 
-	TerrainEnum[] GetChances(int x, int y, TerrainEnum lastTile) {
-		Dictionary<TerrainEnum, int> tilesCount = new Dictionary<TerrainEnum, int>();
-
-		IncludePosition(x - 1, y - 1, tilesCount);
-		IncludePosition(x - 1, y, tilesCount);
-		IncludePosition(x - 1, y + 1, tilesCount);
-		IncludePosition(x, y + 1, tilesCount);
-		IncludePosition(x + 1, y + 1, tilesCount);
-		IncludePosition(x + 1, y, tilesCount);
-		IncludePosition(x + 1, y - 1, tilesCount);
-		IncludePosition(x, y, tilesCount);
-
-		if (lastTile != TerrainEnum.NONE) {
-			if (!tilesCount.ContainsKey(lastTile))
-				tilesCount.Add(lastTile, 2);
-			else
-				tilesCount[lastTile] += 2;
-		}
-
-		TerrainEnum greaterTile = TerrainEnum.NONE;
-		int greaterAmount = 0;
-
-		foreach (TerrainEnum key in tilesCount.Keys) {
-			if (key != TerrainEnum.NONE && tilesCount[key] > greaterAmount) {
-				greaterAmount = tilesCount[key];
-				greaterTile = key;
-			}
-		}
-
-		return ChancesForGreater(greaterTile);
-	}
-
-	void IncludePosition(int x, int y, Dictionary<TerrainEnum, int> tilesCount) {
-		TerrainEnum tile = GetTerrainAtPosition(x, y);
-
-		if (!tilesCount.ContainsKey(tile)) {
-			tilesCount.Add(tile, 1);
-		} else {
-			tilesCount[tile]++;
-		}
-	}
-
 	TerrainEnum GetTerrainAtPosition(int x, int y) {
 		TerrainEnum terrain;
 		if (x < 0 || y < 0 || x >= width || y >= height) {
@@ -173,43 +97,6 @@ public class MapManager
 		return terrain;
 	}
 
-	TerrainEnum[] ChancesForGreater(TerrainEnum tile) {
-		int max = 100;
-		List<TerrainEnum> chances = new List<TerrainEnum>();
-		int actual = 0;
-
-		switch (tile) {
-			case TerrainEnum.NONE:
-			case TerrainEnum.GRASS:
-				InsertChances(TerrainEnum.GRASS, 90, actual, max, chances);
-				actual = 90;
-				InsertChances(TerrainEnum.ROCKFLOOR, 10, actual, max, chances);
-				break;
-
-			case TerrainEnum.ROCKFLOOR:
-				InsertChances(TerrainEnum.GRASS, 30, actual, max, chances);
-				actual = 30;
-				InsertChances(TerrainEnum.ROCK, 70, actual, max, chances);
-				break;
-
-			case TerrainEnum.ROCK:
-				InsertChances(TerrainEnum.ROCKFLOOR, 30, actual, max, chances);
-				actual = 30;
-				InsertChances(TerrainEnum.ROCK, 60, actual, max, chances);
-				break;
-		}
-
-		return chances.ToArray();
-	}
-
-	void InsertChances(TerrainEnum tile, int amount, int actual, int max, List<TerrainEnum> chances) {
-		int i = actual;
-		int end = actual + amount;
-		while (i < end && i < max) {
-			chances.Add(tile);
-			i++;
-		}
-	}
 
 	void Build() {
 		mapHolder = new GameObject("Map").transform;
@@ -221,16 +108,31 @@ public class MapManager
 			rowHolder.SetParent(mapHolder);
 
 			for (int y = 0; y < height; y++) {
-				GameObject floor = SceneHelper.InstantiateFloor(terrainMap[x, y], new Vector2(x, y));
-				floor.transform.SetParent(rowHolder);
-				floorTiles[x, y] = floor;
+				Node node = SceneHelper.InstantiateNode(new Vector2(x, y));
+				node.transform.SetParent(rowHolder);
+				nodeMap[x, y] = node;
 
-				GameObject block = SceneHelper.InstantiateObject(terrainMap[x, y], new Vector2(x, y));
-				if (block != null) {
-					block.transform.SetParent(rowHolder);
+				switch (terrainMap[x, y])
+				{
+					case TerrainEnum.ROCKFLOOR:
+					case TerrainEnum.ROCK:
+						node.AddFloor(SceneHelper.instance.RockFloorPrefab);
+						break;
+
+					default:
+						node.AddFloor(SceneHelper.instance.GrassFloorPrefab);
+						break;
 				}
 
-				objectsMap[x, y] = block;
+				switch(terrainMap[x, y]) {
+					case TerrainEnum.ROCK:
+						node.AddBlock(SceneHelper.instance.RockPrefab);
+						break;
+
+					case TerrainEnum.TREE:
+						node.AddBlock(SceneHelper.instance.TreePrefab);
+						break;
+				}
 			}
 		}
 	}
@@ -244,19 +146,13 @@ public class MapManager
 	}
 
 	public static GameObject CreateObject(GameObject prefab, Vector3 position, Sprite sprite, bool UI) {
-		if(objectsMap[(int)position.x, (int)position.y] != null)
+		Node node = nodeMap[(int)position.x, (int)position.y];
+		if(node.GetBlock() != null)
 			return null;
 
-		GameObject newObject = SceneHelper.InstantiationHelper(prefab, (Vector2)position);
-		newObject.transform.SetParent(GameObject.Find("Row " + position.x).transform);
-
-		if(sprite != null) {
-			SpriteRenderer renderer = (SpriteRenderer)newObject.GetComponent<SpriteRenderer>();
-			renderer.sprite = sprite;	
-		}
+		GameObject newObject = node.AddBlock(prefab);
 
 		if (!UI) {
-			objectsMap[(int)position.x, (int)position.y] = newObject;
 			walkableMap[(int)position.x, (int)position.y] = !(newObject.layer == LayerMask.NameToLayer("Blocking"));
 		}
 
@@ -266,12 +162,11 @@ public class MapManager
 	public static void DeleteObject(Vector3 position) {
 		int x = (int)position.x;
 		int y = (int)position.y;
-		if (objectsMap [x, y] == null)
+		Node node = nodeMap[x, y];
+		if (node.GetBlock() == null)
 			return;
 
-		GameObject removingObj = objectsMap[x, y];
-		objectsMap[x, y] = null;
-		UnityEngine.Object.Destroy(removingObj);
+		node.RemoveBlock();
 		walkableMap[x, y] = true;
 
 		NotificateChangeFrom(x, y);
@@ -290,13 +185,18 @@ public class MapManager
 	}
 
 	static void NotificateChange(int x, int y) {
-		if(x < 0 || y < 0 || x >= width || y >= height || objectsMap[x, y] == null)
+		if(x < 0 || y < 0 || x >= width || y >= height)
 			return;
 
-		AutoTile component = objectsMap[x, y].GetComponent<AutoTile>() as AutoTile;
-		if(component == null)
+		Node node = nodeMap[x, y];
+		GameObject block = node.GetBlock();
+		if(!block)
 			return;
 
-		component.UpdateState();
+		AutoTile autoTile = block.GetComponent<AutoTile>() as AutoTile;
+		if(autoTile == null)
+			return;
+
+		autoTile.UpdateState();
 	}
 }
