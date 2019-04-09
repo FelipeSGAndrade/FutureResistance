@@ -3,5 +3,6 @@
 	GRASS,
 	ROCK,
 	ROCKFLOOR,
-	TREE
+	TREE,
+	WATER
 }

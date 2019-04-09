@@ -8,8 +8,8 @@ public class GameManager : MonoBehaviour {
 	public GameObject selectedCharacter;
 	public List<GameObject> characters;
 	public int charQuantity;
+	public UIController uiController;
 
-	private MapManager mapManager;
 	private Camera mainCamera;
 
 	private GameObject cursor;
@@ -17,14 +17,21 @@ public class GameManager : MonoBehaviour {
 
 	void Start () {
 		mainCamera = Camera.main;
-
-		mapManager = new MapManager();
-		mapManager.InitializeMap();
-
 		cursor = SceneHelper.InstantiateCursor(GetMousePosition());
 
+		uiController.SetState(UIState.MAP_GENERATION);
+	}
+
+	public void StartGame() {
+		uiController.SetState(UIState.GAME);
+
+		MapManager.instance.Build();
+		InitializeChars();
+	}
+
+	void InitializeChars() {
 		for (int i = 0; i < charQuantity; i++) {
-			createCharacter();
+			CreateCharacter();
 		}
 
 		selectedCharacter = characters[0];
@@ -32,7 +39,7 @@ public class GameManager : MonoBehaviour {
 		mainCamera.transform.position = new Vector3(charPosition.x, charPosition.y, mainCamera.transform.position.z);
 	}
 
-	void createCharacter() {
+	void CreateCharacter() {
 		Vector2 position = GetStartingPosition();
 		GameObject character = SceneHelper.InstantiateChar(position);
 		characters.Add(character);
@@ -147,10 +154,10 @@ public class GameManager : MonoBehaviour {
 				TaskManager.AddTask(new BuildTask(position, buildingSprite));
 				break;
 			case 2:
-				MapManager.CreateObject((GameObject)Resources.Load("Prefabs/Wall"), position);
+				MapManager.instance.CreateObject((GameObject)Resources.Load("Prefabs/Wall"), position);
 				break;
 			case 3:
-				MapManager.DeleteObject(position);
+				MapManager.instance.DeleteObject(position);
 				resetWhenDone = false;
 				break;
 			case 4:

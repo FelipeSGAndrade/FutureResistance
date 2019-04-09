@@ -29,7 +29,7 @@ public class ChopCommand : MonoBehaviour, ICommand {
 		}
 
 		position = commandArgs.targetPosition;
-		tree = MapManager.nodeMap[(int)position.x, (int)position.y].GetBlock();
+		tree = MapManager.instance.nodeMap[(int)position.x, (int)position.y].GetBlock();
 		if (!tree) {
 			Stop();
 			Debug.Log("No tree to chop");
@@ -61,7 +61,7 @@ public class ChopCommand : MonoBehaviour, ICommand {
 	}
 
 	void Finish() {
-		MapManager.DeleteObject(tree.transform.position);
+		MapManager.instance.DeleteObject(tree.transform.position);
 		ResourceManager.AddResource(ResourceType.WOOD, 5);
 
 		finished = true;

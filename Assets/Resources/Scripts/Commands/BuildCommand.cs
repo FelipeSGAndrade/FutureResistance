@@ -56,7 +56,7 @@ public class BuildCommand : MonoBehaviour, ICommand {
 	}
 
 	void FinishBuilding() {
-		MapManager.ReplaceObject(bluePrint.finalObjectPrefab, bluePrint.position);
+		MapManager.instance.ReplaceObject(bluePrint.finalObjectPrefab, bluePrint.position);
 
 		finished = true;
 		successful = true;

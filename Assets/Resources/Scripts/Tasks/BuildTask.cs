@@ -20,7 +20,7 @@ public class BuildTask : Task {
 	}
 
 	private BluePrint CreateBuildBlueprint(Vector2 targetPosition, Sprite buildingSprite) {
-		bluePrintObject = MapManager.CreateObject((GameObject)Resources.Load("Prefabs/Blueprint"), targetPosition, buildingSprite);
+		bluePrintObject = MapManager.instance.CreateObject((GameObject)Resources.Load("Prefabs/Blueprint"), targetPosition, buildingSprite);
 		if(!bluePrintObject) {
 			Debug.Log("Cant build there");
 			return null;

@@ -49,7 +49,7 @@ public class AutoTile : MonoBehaviour {
 			return gameObject;
 		}
 
-		Node node = MapManager.nodeMap[x, y];
+		Node node = MapManager.instance.nodeMap[x, y];
 
 		if (floor) return node.GetFloor();
 		else return node.GetBlock();
@@ -69,33 +69,31 @@ public class AutoTile : MonoBehaviour {
 		if(!spriteRenderer)
 			return;
 
-		int x = (int)transform.position.x;
-		int y = (int)transform.position.y;
-
+		Node node = GetComponentInParent<Node>();
 		int tileValue = 0;
 
-		if(CompareNeighbor(x, y + 1)) {
+		if(CompareNeighbor(node.x, node.y + 1)) {
 			tileValue += 1;
 		}
 
-		if (CompareNeighbor(x - 1, y)) {
+		if (CompareNeighbor(node.x - 1, node.y)) {
 			tileValue += 2;
 		}
 
-		if (CompareNeighbor(x, y - 1)) {
+		if (CompareNeighbor(node.x, node.y - 1)) {
 			tileValue += 8;
 		}
 
-		if (CompareNeighbor(x + 1, y)) {
+		if (CompareNeighbor(node.x + 1, node.y)) {
 			tileValue += 4;
 		}
-
+		
 		if(tileValue == currentTileValue)
 			return;
 
 		spriteRenderer.sprite = (Sprite)sortedTiles[tileValue];
 
 		currentTileValue = tileValue;
-		MapManager.NotificateChangeFrom(x, y);
+		MapManager.instance.NotificateChangeFrom(node.x, node.y);
 	}
 }

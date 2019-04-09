@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class Node : MonoBehaviour
 {
+    public int x;
+    public int y;
     private GameObject block;
     private GameObject floor;
 
     void Start() {
-        gameObject.name = "Node" + "(" + transform.position.x + "," + transform.position.y + ")";
     }
 
     void Update() {
@@ -17,13 +18,19 @@ public class Node : MonoBehaviour
     void OnMouseDown() {
     }
 
+    public void Initialize(int x, int y) {
+        this.x = x;
+        this.y = y;
+        gameObject.name = "Node" + "(" + x + "," + y + ")";
+    }
+
     public GameObject AddBlock(GameObject blockPrefab) {
-        block = (GameObject)Instantiate(blockPrefab, transform.position, Quaternion.identity);
+        block = (GameObject)Instantiate(blockPrefab, new Vector2(x, y), Quaternion.identity);
         block.transform.SetParent(transform);
 
         SpriteRenderer spriteRenderer = block.GetComponent<SpriteRenderer>();
         if (spriteRenderer) {
-            spriteRenderer.sortingOrder = Mathf.RoundToInt(transform.position.y) * -1;
+            spriteRenderer.sortingOrder = Mathf.RoundToInt(y) * -1;
         }
         return block;
     }
@@ -34,7 +41,7 @@ public class Node : MonoBehaviour
     }
 
     public GameObject AddFloor(GameObject floorPrefab) {
-        floor = (GameObject)Instantiate(floorPrefab, transform.position, Quaternion.identity);
+        floor = (GameObject)Instantiate(floorPrefab, new Vector2(x, y), Quaternion.identity);
         floor.transform.SetParent(transform);
         return floor;
     }
