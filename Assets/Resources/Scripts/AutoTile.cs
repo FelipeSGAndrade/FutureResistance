@@ -4,18 +4,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AutoTile : MonoBehaviour {
-
-	private int currentTileValue = 0;
-	private SpriteRenderer spriteRenderer;
 	public Texture2D texture;
 	public string tileTag;
 	public bool floor;
 
-	UnityEngine.Object[] sortedTiles;
+	private int currentTileValue = 0;
+	private SpriteRenderer spriteRenderer;
+	private UnityEngine.Object[] sortedTiles;
+	private Node node;
 
 	// Use this for initialization
 	void Start () {
 		spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+		node = GetComponentInParent<Node>();
 
 		if(!spriteRenderer) {
             throw new UnityException("Auto Tile needs a sprite renderer");
@@ -49,10 +50,10 @@ public class AutoTile : MonoBehaviour {
 			return gameObject;
 		}
 
-		Node node = MapManager.instance.nodeMap[x, y];
+		Node neighborNode = MapManager.instance.nodeMap[x, y];
 
-		if (floor) return node.GetFloor();
-		else return node.GetBlock();
+		if (floor) return neighborNode.GetFloor();
+		else return neighborNode.GetBlock();
 	}
 
 	private bool CompareNeighbor(int x, int y) {
@@ -69,7 +70,6 @@ public class AutoTile : MonoBehaviour {
 		if(!spriteRenderer)
 			return;
 
-		Node node = GetComponentInParent<Node>();
 		int tileValue = 0;
 
 		if(CompareNeighbor(node.x, node.y + 1)) {
@@ -94,6 +94,10 @@ public class AutoTile : MonoBehaviour {
 		spriteRenderer.sprite = (Sprite)sortedTiles[tileValue];
 
 		currentTileValue = tileValue;
+		MapManager.instance.NotificateChangeFrom(node.x, node.y);
+	}
+
+	public void OnDestroy() {
 		MapManager.instance.NotificateChangeFrom(node.x, node.y);
 	}
 }

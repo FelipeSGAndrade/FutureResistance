@@ -17,7 +17,7 @@ public class ChopCommand : MonoBehaviour, ICommand {
 	private int neededTicks = 5;
 	private int ticks;
 	Vector2 position;
-	GameObject tree;
+	Node node;
 	SpriteRenderer spriteRenderer;
 
 	public bool Initialize(ICommandArgs args) {
@@ -29,7 +29,9 @@ public class ChopCommand : MonoBehaviour, ICommand {
 		}
 
 		position = commandArgs.targetPosition;
-		tree = MapManager.instance.nodeMap[(int)position.x, (int)position.y].GetBlock();
+		node = MapManager.instance.nodeMap[(int)position.x, (int)position.y];
+
+		GameObject tree = node.GetBlock();
 		if (!tree) {
 			Stop();
 			Debug.Log("No tree to chop");
@@ -61,7 +63,7 @@ public class ChopCommand : MonoBehaviour, ICommand {
 	}
 
 	void Finish() {
-		MapManager.instance.DeleteObject(tree.transform.position);
+		node.RemoveBlock();
 		ResourceManager.AddResource(ResourceType.WOOD, 5);
 
 		finished = true;

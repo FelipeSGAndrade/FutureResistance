@@ -35,20 +35,25 @@ public class MapGenerator : MonoBehaviour
 
 	void Update() {
 		if (!built) {
-			Texture2D texture = Generate();
-			texture.filterMode = FilterMode.Point;
-			texture.wrapMode = TextureWrapMode.Clamp;
-			renderer.sprite = Sprite.Create(texture, new Rect(0, 0, width, height), new Vector2(0f, 0f));
+			Generate();
 		}
 	}
 
 	public TerrainEnum[,] Finish() {
+		Generate();
 		built = true;
 		renderer.enabled = false;
 		return terrainMap;
 	}
 
-	Texture2D Generate() {
+	void Generate() {
+		Texture2D texture = CreateTexture();
+		texture.filterMode = FilterMode.Point;
+		texture.wrapMode = TextureWrapMode.Clamp;
+		renderer.sprite = Sprite.Create(texture, new Rect(0, 0, width, height), new Vector2(0f, 0f));
+	}
+
+	Texture2D CreateTexture() {
 		Texture2D texture = new Texture2D(width, height);
 		Vector2 offset = new Vector2(offsetX, offsetY);
 

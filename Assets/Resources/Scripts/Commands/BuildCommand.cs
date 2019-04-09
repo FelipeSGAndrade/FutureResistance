@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BuildCommandArgs : ICommandArgs {
-	public BluePrint bluePrint;
+	public Node node;
 
-	public BuildCommandArgs(BluePrint bluePrint) {
-		this.bluePrint = bluePrint;
+	public BuildCommandArgs(Node node) {
+		this.node = node;
 	}
 }
 
@@ -16,9 +16,7 @@ public class BuildCommand : MonoBehaviour, ICommand {
 	private bool successful = false;
 	private int buildNeededTicks = 5;
 	private int buildTicks;
-	BluePrint bluePrint;
-	Vector2 position;
-	SpriteRenderer spriteRenderer;
+	private BluePrint bluePrint;
 
 	public bool Initialize(ICommandArgs args) {
 		BuildCommandArgs commandArgs = args as BuildCommandArgs;
@@ -28,27 +26,17 @@ public class BuildCommand : MonoBehaviour, ICommand {
 			throw new UnityException("Wrong type of args");
 		}
 
-		bluePrint = commandArgs.bluePrint;
-		position = bluePrint.position;
-		spriteRenderer = bluePrint.GetComponent<SpriteRenderer>();
-
+		bluePrint = commandArgs.node.GetBluePrint();
 		TickSystem.Subscribe(Build);
 
 		return true;
-	}
-
-	void UpdateSprite() {
-		if (!spriteRenderer) return;
-
-		float newAlpha = (1f / buildNeededTicks) * buildTicks;
-		spriteRenderer.color = new Color(1, 1, 1, newAlpha);
 	}
 
 	void Build() {
 		if (finished) return;
 
 		buildTicks++;
-		UpdateSprite();
+		bluePrint.BuildTick(buildTicks, buildNeededTicks);
 		if (buildTicks >= buildNeededTicks) {
 			TickSystem.Unsubscribe(Build);
 			FinishBuilding();
@@ -56,7 +44,7 @@ public class BuildCommand : MonoBehaviour, ICommand {
 	}
 
 	void FinishBuilding() {
-		MapManager.instance.ReplaceObject(bluePrint.finalObjectPrefab, bluePrint.position);
+		bluePrint.FinishBuilding();
 
 		finished = true;
 		successful = true;

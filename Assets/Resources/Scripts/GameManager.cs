@@ -3,23 +3,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 
-public class GameManager : MonoBehaviour {
+public enum ActionType {
+	NONE,
+	WALK,
+	BUILD,
+	PLACE,
+	CHOP,
+	DELETE
+}
 
+public class GameManager : MonoBehaviour {
 	public GameObject selectedCharacter;
 	public List<GameObject> characters;
 	public int charQuantity;
 	public UIController uiController;
+	public bool enableTerrainModifier;
 
 	private Camera mainCamera;
 
 	private GameObject cursor;
-	private int currentAction = 0;
+	private ActionType currentAction = ActionType.NONE;
+	private GameObject actionPrefab;
 
 	void Start () {
 		mainCamera = Camera.main;
 		cursor = SceneHelper.InstantiateCursor(GetMousePosition());
 
-		uiController.SetState(UIState.MAP_GENERATION);
+		if (enableTerrainModifier)
+			uiController.SetState(UIState.MAP_GENERATION);
+		else
+			StartGame();
 	}
 
 	public void StartGame() {
@@ -73,9 +86,9 @@ public class GameManager : MonoBehaviour {
 		}
 
 		if (Input.GetKeyDown(KeyCode.E))
-			SetAction(2);
+			SetAction(ActionType.PLACE, SceneHelper.instance.WallPrefab);
 		if (Input.GetKeyDown(KeyCode.X))
-			SetAction(3);
+			SetAction(ActionType.DELETE);
 
 		if(Input.GetMouseButtonDown(0)) {
 			if(!EventSystem.current.IsPointerOverGameObject())
@@ -114,7 +127,7 @@ public class GameManager : MonoBehaviour {
 		return Vector3.back;
 	}
 
-	public void SetAction(int action) {
+	public void SetAction(ActionType action, GameObject prefab = null) {
 		if(action == currentAction) {
 			ResetAction();
 			return;
@@ -123,14 +136,21 @@ public class GameManager : MonoBehaviour {
 		currentAction = action;
 
 		switch(action) {
-			case 1:
-			case 2:
-				GameObject wallPefab = (GameObject)Resources.Load ("Prefabs/Wall");
-				((SpriteRenderer)cursor.GetComponent<SpriteRenderer> ()).sprite = ((SpriteRenderer)wallPefab.GetComponent<SpriteRenderer> ()).sprite;
+			case ActionType.BUILD:
+			case ActionType.PLACE:
+				if (!prefab) {
+					Debug.LogError("Action " + action + " missing prefab!");
+					return;
+				}
+
+				actionPrefab = prefab;
+				SpriteRenderer prefabSpriteRenderer = prefab.GetComponent<SpriteRenderer>();
+				SpriteRenderer cursorSpriteRenderer = (SpriteRenderer)cursor.GetComponent<SpriteRenderer>();
+				cursorSpriteRenderer.sprite = prefabSpriteRenderer.sprite;
 				break;
 
-			case 3:
-			case 4:
+			case ActionType.CHOP:
+			case ActionType.DELETE:
 				Sprite cancelSprite = (Sprite)(Resources.LoadAll ("Sprites/Z18-TileA5"))[10];
 				((SpriteRenderer)cursor.GetComponent<SpriteRenderer> ()).sprite = cancelSprite;
 				break;
@@ -146,21 +166,22 @@ public class GameManager : MonoBehaviour {
 		Vector3 position = GetGridMousePosition();
 		if (position == Vector3.back) return;
 
+		Node node = MapManager.instance.nodeMap[(int)position.x , (int)position.y];
+
 		bool resetWhenDone = keepAction;
 
 		switch(currentAction) {
-			case 1:
-				Sprite buildingSprite = ((SpriteRenderer)cursor.GetComponent<SpriteRenderer>()).sprite;
-				TaskManager.AddTask(new BuildTask(position, buildingSprite));
+			case ActionType.BUILD:
+				TaskManager.AddTask(new BuildTask(node, actionPrefab));
 				break;
-			case 2:
-				MapManager.instance.CreateObject((GameObject)Resources.Load("Prefabs/Wall"), position);
+			case ActionType.PLACE:
+				node.AddBlock(actionPrefab);
 				break;
-			case 3:
-				MapManager.instance.DeleteObject(position);
+			case ActionType.DELETE:
+				node.RemoveBlock();
 				resetWhenDone = false;
 				break;
-			case 4:
+			case ActionType.CHOP:
 				ChopTask task = ChopTask.Create(position);
 				if (task)
 					TaskManager.AddTask(task);

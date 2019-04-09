@@ -3,43 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BuildTask : Task {
-
-	GameObject bluePrintObject;
-
-	public BuildTask(Vector2 targetPosition, Sprite buildingSprite) {
+	public BuildTask(Node node, GameObject prefabToBuild) {
 		type = TaskType.BUILD;
-		BluePrint bluePrint = CreateBuildBlueprint(targetPosition, buildingSprite);
 
-		if (!bluePrint) {
+		if (!CreateBuildBlueprint(node, prefabToBuild)) {
 			aborted = true;
 			return;
 		}
 
-		AddMoveCommand(targetPosition);
-		AddBuildCommand(bluePrint);
+		AddMoveCommand(node);
+		AddBuildCommand(node);
 	}
 
-	private BluePrint CreateBuildBlueprint(Vector2 targetPosition, Sprite buildingSprite) {
-		bluePrintObject = MapManager.instance.CreateObject((GameObject)Resources.Load("Prefabs/Blueprint"), targetPosition, buildingSprite);
-		if(!bluePrintObject) {
-			Debug.Log("Cant build there");
-			return null;
-		}
+	private bool CreateBuildBlueprint(Node node, GameObject prefabToBuild) {
+		BluePrint bluePrint = node.AddBluePrint(prefabToBuild);
+		if (!bluePrint) return false;
 
-		BluePrint bluePrint = bluePrintObject.GetComponent<BluePrint>();
-		bluePrint.finalObjectPrefab = (GameObject)Resources.Load("Prefabs/Wall");
-		bluePrint.position = targetPosition;
-		return bluePrint;
+		return true;
 	}
 
-	private void AddMoveCommand(Vector2 targetPosition) {
-		MoveCommandArgs args = new MoveCommandArgs(targetPosition, true);
+	private void AddMoveCommand(Node node) {
+		MoveCommandArgs args = new MoveCommandArgs(new Vector2(node.x, node.y), true);
 		Step step = new Step(typeof(MoveCommand), args);
 		stepList.Add(step);
 	}
 
-	private void AddBuildCommand(BluePrint bluePrint) {
-		BuildCommandArgs args = new BuildCommandArgs(bluePrint);
+	private void AddBuildCommand(Node node) {
+		BuildCommandArgs args = new BuildCommandArgs(node);
 		Step step = new Step(typeof(BuildCommand), args);
 		stepList.Add(step);
 	}

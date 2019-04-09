@@ -10,6 +10,7 @@ public class SceneHelper : MonoBehaviour{
 	public GameObject RockFloorPrefab;
 	public GameObject RockPrefab;
 	public GameObject TreePrefab;
+	public GameObject WallPrefab;
 	public GameObject Cursor;
 
 	void Awake() {

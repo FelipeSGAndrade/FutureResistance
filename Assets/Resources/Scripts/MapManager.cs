@@ -40,10 +40,6 @@ public class MapManager : MonoBehaviour
 		}
 	}
 
-	private bool IsWalkable(TerrainEnum terrain) {
-		return terrain != TerrainEnum.ROCK && terrain != TerrainEnum.TREE;
-	}
-
 	public void Build() {
 		built = true;
 		terrainMap = mapGenerator.Finish();
@@ -62,7 +58,6 @@ public class MapManager : MonoBehaviour
 				node.Initialize(x, y);
 				node.transform.SetParent(rowHolder);
 				nodeMap[x, y] = node;
-				walkableMap[x, y] = IsWalkable(terrainMap[x, y]);
 
 				switch (terrainMap[x, y])
 				{
@@ -87,46 +82,6 @@ public class MapManager : MonoBehaviour
 				}
 			}
 		}
-	}
-
-	public GameObject CreateObject(GameObject prefab, Vector3 position) {
-		return CreateObject(prefab, position, null, false);
-	}
-
-	public GameObject CreateObject(GameObject prefab, Vector3 position, Sprite sprite) {
-		return CreateObject(prefab, position, sprite, false);
-	}
-
-	public GameObject CreateObject(GameObject prefab, Vector3 position, Sprite sprite, bool UI) {
-		Node node = nodeMap[(int)position.x, (int)position.y];
-		if(node.GetBlock() != null)
-			return null;
-
-		GameObject newObject = node.AddBlock(prefab);
-
-		if (!UI) {
-			walkableMap[(int)position.x, (int)position.y] = !(newObject.layer == LayerMask.NameToLayer("Blocking"));
-		}
-
-		return newObject;
-	}
-
-	public void DeleteObject(Vector3 position) {
-		int x = (int)position.x;
-		int y = (int)position.y;
-		Node node = nodeMap[x, y];
-		if (node.GetBlock() == null)
-			return;
-
-		node.RemoveBlock();
-		walkableMap[x, y] = true;
-
-		NotificateChangeFrom(x, y);
-	}
-
-	public GameObject ReplaceObject(GameObject prefab, Vector3 position) {
-		DeleteObject(position);
-		return CreateObject(prefab, position);
 	}
 
 	public void NotificateChangeFrom(int x, int y) {
