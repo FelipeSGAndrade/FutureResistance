@@ -1,4 +1,4 @@
-﻿public enum TerrainEnum {
+﻿public enum TerrainType {
 	NONE,
 	GRASS,
 	ROCK,

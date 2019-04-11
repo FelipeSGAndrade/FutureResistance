@@ -6,13 +6,13 @@ using UnityEngine.UI;
 public class BuildButton : MonoBehaviour
 {
     public GameObject prefabToBuild;
-    public GameManager gameManager;
+    public GameController gameController;
     public Image buttonImage;
 
     void Start()
     {
         Button button = GetComponent<Button>();
-        button.onClick.AddListener(() => gameManager.SetAction(ActionType.BUILD, prefabToBuild));
+        button.onClick.AddListener(() => gameController.SetAction(ActionType.BUILD, prefabToBuild));
 
         SpriteRenderer prefabSpriteRenderer = prefabToBuild.GetComponent<SpriteRenderer>();
 

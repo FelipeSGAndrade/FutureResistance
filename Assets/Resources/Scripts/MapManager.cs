@@ -10,7 +10,7 @@ public class MapManager : MonoBehaviour
 	public static MapManager instance;
 	public static int width;
 	public static int height;
-	public TerrainEnum[,] terrainMap;
+	public TerrainType[,] terrainMap;
 	public static bool[,] walkableMap;
 	public Node[,] nodeMap;
 
@@ -61,8 +61,8 @@ public class MapManager : MonoBehaviour
 
 				switch (terrainMap[x, y])
 				{
-					case TerrainEnum.ROCKFLOOR:
-					case TerrainEnum.ROCK:
+					case TerrainType.ROCKFLOOR:
+					case TerrainType.ROCK:
 						node.AddFloor(SceneHelper.instance.RockFloorPrefab);
 						break;
 
@@ -72,11 +72,11 @@ public class MapManager : MonoBehaviour
 				}
 
 				switch(terrainMap[x, y]) {
-					case TerrainEnum.ROCK:
+					case TerrainType.ROCK:
 						node.AddBlock(SceneHelper.instance.RockPrefab);
 						break;
 
-					case TerrainEnum.TREE:
+					case TerrainType.TREE:
 						node.AddBlock(SceneHelper.instance.TreePrefab);
 						break;
 				}

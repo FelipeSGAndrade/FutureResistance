@@ -3,16 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 
-public enum ActionType {
-	NONE,
-	WALK,
-	BUILD,
-	PLACE,
-	CHOP,
-	DELETE
-}
-
-public class GameManager : MonoBehaviour {
+public class GameController : MonoBehaviour {
 	public GameObject selectedCharacter;
 	public List<GameObject> characters;
 	public int charQuantity;

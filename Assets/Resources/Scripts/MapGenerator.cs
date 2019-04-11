@@ -15,13 +15,13 @@ public class MapGenerator : MonoBehaviour
 	public int octaves = 1;
 	public float persistance = 0.5f;
 	public float lacunarity = 1;
-    public TerrainEnum[,] terrainMap;
+    public TerrainType[,] terrainMap;
 
 	private bool built;
 	private new SpriteRenderer renderer;
 
 	void Start() {
-		terrainMap = new TerrainEnum[width, height];
+		terrainMap = new TerrainType[width, height];
 
 		initialOffsetX = Random.Range(0f, 999999f);
 		initialOffsetY = Random.Range(0f, 999999f);
@@ -39,7 +39,7 @@ public class MapGenerator : MonoBehaviour
 		}
 	}
 
-	public TerrainEnum[,] Finish() {
+	public TerrainType[,] Finish() {
 		Generate();
 		built = true;
 		renderer.enabled = false;
@@ -63,23 +63,23 @@ public class MapGenerator : MonoBehaviour
 			for (int y = 0; y < height; y++) {
 				Vector2 position = new Vector2(x, y);
 
-				TerrainEnum terrain = GetTerrainFromNoise(noiseMap[x, y]);
+				TerrainType terrain = GetTerrainFromNoise(noiseMap[x, y]);
 				terrainMap[x, y] = terrain;
 
 				switch(terrain) {
-					case TerrainEnum.ROCK:
+					case TerrainType.ROCK:
 						texture.SetPixel(x, y, Color.black);
 						break;
-					case TerrainEnum.ROCKFLOOR:
+					case TerrainType.ROCKFLOOR:
 						texture.SetPixel(x, y, new Color(0.64f, 0.16f, 0.16f));
 						break;
-					case TerrainEnum.GRASS:
+					case TerrainType.GRASS:
 						texture.SetPixel(x, y, Color.green);
 						break;
-					case TerrainEnum.TREE:
+					case TerrainType.TREE:
 						texture.SetPixel(x, y, new Color(0, 0.5f, 0));
 						break;
-					case TerrainEnum.WATER:
+					case TerrainType.WATER:
 						texture.SetPixel(x, y, new Color(0, 0, 0.5f));
 						break;
 				}
@@ -91,17 +91,17 @@ public class MapGenerator : MonoBehaviour
 		return texture;
 	}
 
-	TerrainEnum GetTerrainFromNoise(float noise) {
+	TerrainType GetTerrainFromNoise(float noise) {
 		if (noise > 0.6) 
-			return TerrainEnum.ROCK;
+			return TerrainType.ROCK;
 
 		if (noise > 0.55) 
-			return TerrainEnum.ROCKFLOOR;
+			return TerrainType.ROCKFLOOR;
 
 		if (noise < 0.1)
-			return TerrainEnum.WATER;
+			return TerrainType.WATER;
 
-		return TerrainEnum.GRASS;
+		return TerrainType.GRASS;
 	}
 
 
@@ -111,16 +111,16 @@ public class MapGenerator : MonoBehaviour
 			for (int y = 0; y < height; y++) {
 
 				switch (terrainMap[x, y]) {
-					case TerrainEnum.GRASS:
+					case TerrainType.GRASS:
 
-						TerrainEnum t1 = GetTerrainAtPosition(x + 1, y);
-						TerrainEnum t2 = GetTerrainAtPosition(x - 1, y);
+						TerrainType t1 = GetTerrainAtPosition(x + 1, y);
+						TerrainType t2 = GetTerrainAtPosition(x - 1, y);
 
-						if (t1 == TerrainEnum.TREE || t2 == TerrainEnum.TREE)
+						if (t1 == TerrainType.TREE || t2 == TerrainType.TREE)
 							continue;
 
 						if (Random.Range(0, 100) < treeChance) {
-							terrainMap[x, y] = TerrainEnum.TREE;
+							terrainMap[x, y] = TerrainType.TREE;
 						}
 						break;
 				}
@@ -128,9 +128,9 @@ public class MapGenerator : MonoBehaviour
 		}
 	}
 
-	TerrainEnum GetTerrainAtPosition(int x, int y) {
+	TerrainType GetTerrainAtPosition(int x, int y) {
 		if (x < 0 || y < 0 || x >= width || y >= height)
-			return TerrainEnum.NONE;
+			return TerrainType.NONE;
 
 		return terrainMap[x, y];
 	}
