@@ -2,38 +2,44 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Step {
-    public Type commandType;
-    public ICommandArgs args;
-    public bool done = false;
-
-    public Step(Type type, ICommandArgs args) {
-        this.commandType = type;
-        this.args = args;
-    }
-}
-
 public abstract class Task {
     protected TaskType type;
     public TaskType Type { get { return type; } }
-    public bool Taken { get; set; }
-    protected bool aborted = false;
-    public bool Aborted { get { return aborted; } }
 
-	protected List<Step> stepList = new List<Step>();
-    private ICommand currentCommand;
+    protected TaskStatus status = TaskStatus.CREATED;
+    public TaskStatus Status { get { return status; } }
+
     private Step currentStep;
-    private bool done = false;
+    private ICommand currentCommand;
+	protected List<Step> stepList = new List<Step>();
+
+    private bool initialized;
+    private bool done;
+
+    public abstract TaskStatus Validate();
+    public abstract bool Initialize();
 
     public override string ToString() {
-        return "Type: " + Type + " taken:" + Taken;
+        return "Type: " + Type;
     }
 
     public static implicit operator bool(Task exists) {
         return exists != null;
     }
 
+    public Task(TaskType type) {
+        this.type = type;
+    }
+
     public bool Update(GameObject unit) {
+        if (!initialized) {
+            initialized = Initialize();
+        }
+
+        if (status != TaskStatus.READY) {
+            return false;
+        }
+
 		if (currentCommand == null) {
             currentStep = stepList.Find(step => !step.done);
 

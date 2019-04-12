@@ -44,9 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84090facaef9c8841b2104155aaa5ddf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bluePrintPrefab: {fileID: 1667064684720590, guid: de984c729753df1409d7be63743d510d,
+  buildingPrefab: {fileID: 4077098056453623141, guid: ab3ed79622d46e740beb4085b7cec28b,
     type: 3}
-  HighlightColor: {r: 0.8413128, g: 0.8584906, b: 0.07694017, a: 0.627451}
+  HighlightColor: {r: 1, g: 0.9729747, b: 0.10849059, a: 0.7058824}
   x: 0
   y: 0
 --- !u!61 &1612033533182864972

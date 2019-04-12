@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MoveCommandArgs : ICommandArgs {
-	public Vector3 destination;
+	public Vector2 destination;
 	public float moveTime = 0.2f;
 
 	public bool stopBefore;
 
-	public MoveCommandArgs(Vector3 destination, bool stopBefore = false) {
+	public MoveCommandArgs(Vector2 destination, bool stopBefore = false) {
 		this.destination = destination;
 		this.stopBefore = stopBefore;
 	}
@@ -16,7 +16,7 @@ public class MoveCommandArgs : ICommandArgs {
 
 public class MoveCommand : MonoBehaviour, ICommand {
 
-	private Vector3 destination = Vector3.back;
+	private Vector2 destination = Vector3.back;
 	private bool stopBefore;
 	private float inverseMoveTime;
 	private SpriteRenderer spriteRenderer;
@@ -88,7 +88,6 @@ public class MoveCommand : MonoBehaviour, ICommand {
 			}
 		}
 
-		spriteRenderer.sortingOrder = Mathf.RoundToInt(transform.position.y) * -1;
 	}
 
 	private IEnumerator MovingCoordinator(Vector3[] steps) {

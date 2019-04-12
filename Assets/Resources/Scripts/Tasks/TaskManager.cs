@@ -2,27 +2,57 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TaskManager {
+public class TaskManager : MonoBehaviour {
 
+	public static TaskManager instance;
 	private static List<Task> taskList = new List<Task>();
+	private static Queue<Task> readyQueue = new Queue<Task>();
+
+	void Awake() {
+		if (instance) {
+			Debug.LogError("More than one TaskManager in the scene");
+			return;
+		}
+
+		instance = this;
+	}
+
+	void Start() {
+		InvokeRepeating("ValidateTasks", 0, 0.5f);
+	}
+
+	void ValidateTasks() {
+		for (int i = taskList.Count - 1; i >= 0; i--)
+		{
+			Task task = taskList[i];
+			TaskStatus status = task.Validate();
+
+			if (status == TaskStatus.ABORTED) {
+				taskList.Remove(task);
+				continue;
+			}
+
+			if (status == TaskStatus.READY) {
+				readyQueue.Enqueue(task);
+				taskList.Remove(task);
+			}
+		}
+	}
 
 	public static Task GetNextTask() {
-		Task next = taskList.Find(task => !task.Taken);
+		if (readyQueue.Count == 0)
+			return null;
 
-		if (next) next.Taken = true;
-
+		Task next = readyQueue.Dequeue();
 		return next;
 	}
 
 	public static void AddTask(Task task) {
-		if(!task.Aborted) taskList.Add(task);
-	}
-
-	public static void FinishTask(Task task) {
-		taskList.Remove(task);
+		if (task.Status != TaskStatus.ABORTED)
+			taskList.Add(task);
 	}
 
 	public static void ReturnTask(Task task) {
-		task.Taken = false;
+		AddTask(task);
 	}
 }

@@ -3,35 +3,39 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ChopTask : Task {
+	private Node node;
 
-	private ChopTask(Vector2 targetPosition) {
-		GameObject tree = MapManager.instance.nodeMap[(int)targetPosition.x, (int)targetPosition.y].GetBlock();
-		if (!tree) {
-			return;
-		}
-
-		type = TaskType.CHOP;
-		AddMoveCommand(targetPosition);
-		AddChopCommand(targetPosition);
+	public ChopTask(Node node) : base(TaskType.CHOP) {
+		this.node = node;
+		Validate();
 	}
 
-	public static ChopTask Create(Vector2 targetPosition) {
-		GameObject tree = MapManager.instance.nodeMap[(int)targetPosition.x, (int)targetPosition.y].GetBlock();
+	public override TaskStatus Validate() {
+		GameObject tree = node.GetBlock();
 		if (!tree || !tree.name.Contains("Tree")) {
-			return null;
+			status = TaskStatus.ABORTED;
+			return status;
 		}
 
-		return new ChopTask(targetPosition);
+		status = TaskStatus.READY;
+		return status;
 	}
 
-	private void AddMoveCommand(Vector2 targetPosition) {
+	public override bool Initialize() {
+		AddMoveCommand();
+		AddChopCommand();
+		return true;
+	}
+
+	private void AddMoveCommand() {
+		Vector2 targetPosition = new Vector2(node.x, node.y);
 		MoveCommandArgs args = new MoveCommandArgs(targetPosition, true);
 		Step step = new Step(typeof(MoveCommand), args);
 		stepList.Add(step);
 	}
 
-	private void AddChopCommand(Vector2 targetPosition) {
-		ChopCommandArgs args = new ChopCommandArgs(targetPosition);
+	private void AddChopCommand() {
+		ChopCommandArgs args = new ChopCommandArgs(node);
 		Step step = new Step(typeof(ChopCommand), args);
 		stepList.Add(step);
 	}

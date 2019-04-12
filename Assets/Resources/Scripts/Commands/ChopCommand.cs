@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class ChopCommandArgs : ICommandArgs {
 
-	public Vector2 targetPosition;
-	public ChopCommandArgs(Vector2 targetPosition) {
-		this.targetPosition = targetPosition;
+	public Node node;
+	public ChopCommandArgs(Node node) {
+		this.node = node;
 	}
 }
 
@@ -16,7 +16,6 @@ public class ChopCommand : MonoBehaviour, ICommand {
 	private bool successful = false;
 	private int neededTicks = 5;
 	private int ticks;
-	Vector2 position;
 	Node node;
 	SpriteRenderer spriteRenderer;
 
@@ -28,8 +27,7 @@ public class ChopCommand : MonoBehaviour, ICommand {
 			throw new UnityException("Wrong type of args");
 		}
 
-		position = commandArgs.targetPosition;
-		node = MapManager.instance.nodeMap[(int)position.x, (int)position.y];
+		node = commandArgs.node;
 
 		GameObject tree = node.GetBlock();
 		if (!tree) {

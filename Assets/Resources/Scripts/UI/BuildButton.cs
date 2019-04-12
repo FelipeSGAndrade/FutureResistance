@@ -5,19 +5,14 @@ using UnityEngine.UI;
 
 public class BuildButton : MonoBehaviour
 {
-    public GameObject prefabToBuild;
+    public Buildable building;
     public GameController gameController;
     public Image buttonImage;
 
     void Start()
     {
         Button button = GetComponent<Button>();
-        button.onClick.AddListener(() => gameController.SetAction(ActionType.BUILD, prefabToBuild));
-
-        SpriteRenderer prefabSpriteRenderer = prefabToBuild.GetComponent<SpriteRenderer>();
-
-        if (prefabSpriteRenderer) {
-            buttonImage.sprite = prefabSpriteRenderer.sprite;
-        }
+        button.onClick.AddListener(() => gameController.SetBuildAction(building));
+        buttonImage.sprite = building.GetComponent<SpriteRenderer>().sprite;
     }
 }

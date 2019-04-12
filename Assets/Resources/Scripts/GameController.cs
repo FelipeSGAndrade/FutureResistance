@@ -14,7 +14,7 @@ public class GameController : MonoBehaviour {
 
 	private GameObject cursor;
 	private ActionType currentAction = ActionType.NONE;
-	private GameObject actionPrefab;
+	private Buildable buildingAction;
 
 	void Start () {
 		mainCamera = Camera.main;
@@ -76,10 +76,10 @@ public class GameController : MonoBehaviour {
 				MoveCharacter(!isHoldingShift());
 		}
 
-		if (Input.GetKeyDown(KeyCode.E))
-			SetAction(ActionType.PLACE, SceneHelper.instance.WallPrefab);
+		// if (Input.GetKeyDown(KeyCode.E))
+		// 	SetAction(ActionType.PLACE, SceneHelper.instance.WallPrefab);
 		if (Input.GetKeyDown(KeyCode.X))
-			SetAction(ActionType.DELETE);
+			SetAction((int)ActionType.DELETE);
 
 		if(Input.GetMouseButtonDown(0)) {
 			if(!EventSystem.current.IsPointerOverGameObject())
@@ -88,14 +88,18 @@ public class GameController : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-		cursor.transform.position = GetGridMousePosition();
+		Node node = GetMouseNode();
+		if (!node) return;
+
+		float currentZ = cursor.transform.position.z;
+		cursor.transform.position = new Vector3(node.x, node.y, currentZ);
 	}
 
 	void MoveCharacter(bool clearCommands) {
-		Vector3 position = GetGridMousePosition();
+		Node node = GetMouseNode();
 
-		if(position != Vector3.back) {
-			TaskManager.AddTask(new MoveTask(position));
+		if(node) {
+			TaskManager.AddTask(new MoveTask(node));
 		}
 	}
 
@@ -106,19 +110,27 @@ public class GameController : MonoBehaviour {
 		return mainCamera.ScreenToWorldPoint(position);
 	}
 
-	Vector3 GetGridMousePosition()
+	Node GetMouseNode()
 	{
 		Vector3 position = GetMousePosition();
 		position += new Vector3(0.5f, 0.5f, 0);
 
 		if (position.x > 0 && position.x < MapManager.width && position.y > 0 && position.y < MapManager.height) {
-			return new Vector3((int)position.x, (int)position.y, 0);
+			return MapManager.instance.nodeMap[(int)position.x , (int)position.y];
 		}
 
-		return Vector3.back;
+		return null;
 	}
 
-	public void SetAction(ActionType action, GameObject prefab = null) {
+	public void SetBuildAction(Buildable building) {
+		currentAction = ActionType.BUILD;
+		buildingAction = building;
+		SpriteRenderer cursorSpriteRenderer = (SpriteRenderer)cursor.GetComponent<SpriteRenderer>();
+		cursorSpriteRenderer.sprite = building.GetComponent<SpriteRenderer>().sprite;
+	}
+
+	public void SetAction(int actionType) {
+		ActionType action = (ActionType)actionType;
 		if(action == currentAction) {
 			ResetAction();
 			return;
@@ -127,19 +139,6 @@ public class GameController : MonoBehaviour {
 		currentAction = action;
 
 		switch(action) {
-			case ActionType.BUILD:
-			case ActionType.PLACE:
-				if (!prefab) {
-					Debug.LogError("Action " + action + " missing prefab!");
-					return;
-				}
-
-				actionPrefab = prefab;
-				SpriteRenderer prefabSpriteRenderer = prefab.GetComponent<SpriteRenderer>();
-				SpriteRenderer cursorSpriteRenderer = (SpriteRenderer)cursor.GetComponent<SpriteRenderer>();
-				cursorSpriteRenderer.sprite = prefabSpriteRenderer.sprite;
-				break;
-
 			case ActionType.CHOP:
 			case ActionType.DELETE:
 				Sprite cancelSprite = (Sprite)(Resources.LoadAll ("Sprites/Z18-TileA5"))[10];
@@ -154,28 +153,24 @@ public class GameController : MonoBehaviour {
 	}
 
 	void ExecuteAction(bool keepAction) {
-		Vector3 position = GetGridMousePosition();
-		if (position == Vector3.back) return;
-
-		Node node = MapManager.instance.nodeMap[(int)position.x , (int)position.y];
+		Node node = GetMouseNode();
+		if (!node) return;
 
 		bool resetWhenDone = keepAction;
 
 		switch(currentAction) {
 			case ActionType.BUILD:
-				TaskManager.AddTask(new BuildTask(node, actionPrefab));
+				TaskManager.AddTask(new BuildTask(node, buildingAction));
 				break;
-			case ActionType.PLACE:
-				node.AddBlock(actionPrefab);
-				break;
+			// case ActionType.PLACE:
+			// 	node.AddBlock(actionPrefab);
+			// 	break;
 			case ActionType.DELETE:
 				node.RemoveBlock();
 				resetWhenDone = false;
 				break;
 			case ActionType.CHOP:
-				ChopTask task = ChopTask.Create(position);
-				if (task)
-					TaskManager.AddTask(task);
+				TaskManager.AddTask(new ChopTask(node));
 				break;
 		}
 

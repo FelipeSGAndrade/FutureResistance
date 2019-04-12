@@ -45,7 +45,6 @@ public class WorkerAI : MonoBehaviour {
 		}
 
 		if (currentTask.IsDone()) {
-			TaskManager.FinishTask(currentTask);
 			currentTask = null;
 			state = State.Idle;
 		}

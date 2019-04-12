@@ -16,17 +16,22 @@ public class BuildCommand : MonoBehaviour, ICommand {
 	private bool successful = false;
 	private int buildNeededTicks = 5;
 	private int buildTicks;
-	private BluePrint bluePrint;
+	private Buildable buildable;
 
 	public bool Initialize(ICommandArgs args) {
 		BuildCommandArgs commandArgs = args as BuildCommandArgs;
 		if (commandArgs == null) {
-			successful = false;
-			finished = true;
+			Abort();
 			throw new UnityException("Wrong type of args");
 		}
 
-		bluePrint = commandArgs.node.GetBluePrint();
+		buildable = commandArgs.node.GetBlock().GetComponent<Buildable>();
+		if (!buildable) {
+			Abort();
+			Debug.LogError("Tried to build a non buildable object");
+			return false;
+		}
+
 		TickSystem.Subscribe(Build);
 
 		return true;
@@ -36,7 +41,7 @@ public class BuildCommand : MonoBehaviour, ICommand {
 		if (finished) return;
 
 		buildTicks++;
-		bluePrint.BuildTick(buildTicks, buildNeededTicks);
+		buildable.BuildTick(buildTicks, buildNeededTicks);
 		if (buildTicks >= buildNeededTicks) {
 			TickSystem.Unsubscribe(Build);
 			FinishBuilding();
@@ -44,10 +49,15 @@ public class BuildCommand : MonoBehaviour, ICommand {
 	}
 
 	void FinishBuilding() {
-		bluePrint.FinishBuilding();
+		buildable.FinishBuilding();
 
 		finished = true;
 		successful = true;
+	}
+
+	void Abort() {
+		successful = false;
+		finished = true;
 	}
 
 	public void Stop() {

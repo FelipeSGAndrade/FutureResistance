@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Node : MonoBehaviour
 {
-    public GameObject bluePrintPrefab;
+    public GameObject buildingPrefab;
     public Color HighlightColor;
 
     [HideInInspector]
@@ -14,8 +14,8 @@ public class Node : MonoBehaviour
 
     private GameObject block;
     private GameObject floor;
-    private BluePrint bluePrint;
     private SpriteRenderer floorRenderer;
+    private SpriteRenderer blockRenderer;
 
     void Start() {
     }
@@ -27,11 +27,17 @@ public class Node : MonoBehaviour
     }
 
     void OnMouseEnter() {
-        floorRenderer.color = HighlightColor;
+        if (blockRenderer)
+            blockRenderer.color = HighlightColor;
+        else
+            floorRenderer.color = HighlightColor;
     }
 
     void OnMouseExit() {
         floorRenderer.color = Color.white;
+
+        if (blockRenderer)
+            blockRenderer.color = Color.white;
     }
 
     public void Initialize(int x, int y) {
@@ -48,28 +54,25 @@ public class Node : MonoBehaviour
         return block.layer != LayerMask.NameToLayer("Blocking");
     }
 
-    public BluePrint AddBluePrint(GameObject blockPrefabToBuild) {
+    public void UpdateWalkable() {
+        MapManager.walkableMap[x, y] = IsWalkable();
+    }
+
+    public GameObject Build(Buildable building) {
         if (block) {
 			Debug.Log("Cant build there");
 			return null;
         }
 
-        GameObject bluePrintObject = InstantiateChild(bluePrintPrefab, true);
-        bluePrint = bluePrintObject.GetComponent<BluePrint>();
-        bluePrint.SetBlockToBuild(this, blockPrefabToBuild);
-
-        return bluePrint;
+        AddBlock(building.gameObject);
+        return block;
     }
 
     public GameObject AddBlock(GameObject blockPrefab) {
         block = InstantiateChild(blockPrefab, true);
-        MapManager.walkableMap[x, y] = IsWalkable();
+        blockRenderer = block.GetComponent<SpriteRenderer>();
 
-        if (bluePrint) {
-            Destroy(bluePrint.gameObject);
-            bluePrint = null;
-        }
-
+        UpdateWalkable();
         return block;
     }
 
@@ -77,6 +80,7 @@ public class Node : MonoBehaviour
         Destroy(block);
         MapManager.walkableMap[x, y] = true;
         block = null;
+        blockRenderer = null;
     }
 
     public GameObject AddFloor(GameObject floorPrefab) {
@@ -96,22 +100,11 @@ public class Node : MonoBehaviour
         GameObject newObject = (GameObject)Instantiate(prefab, new Vector2(x, y), Quaternion.identity);
         newObject.transform.SetParent(transform);
 
-        if (sortSprite) {
-            SpriteRenderer spriteRenderer = newObject.GetComponent<SpriteRenderer>();
-            if (spriteRenderer) {
-                spriteRenderer.sortingOrder = Mathf.RoundToInt(y) * -1;
-            }
-        }
-
         return newObject;
     }
 
     public GameObject GetBlock() {
         return block;
-    }
-
-    public BluePrint GetBluePrint() {
-        return bluePrint;
     }
 
     public GameObject GetFloor() {

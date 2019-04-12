@@ -11,9 +11,8 @@ GameObject:
   - component: {fileID: 4000013729899656}
   - component: {fileID: 212000010273877248}
   - component: {fileID: 4177579635849881680}
-  - component: {fileID: 114269399623808756}
   m_Layer: 0
-  m_Name: Wall
+  m_Name: Table
   m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -70,7 +69,7 @@ SpriteRenderer:
   m_SortingLayerID: 1522505137
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300028, guid: 484fe2f734dc030449f58661a02f13ed, type: 3}
+  m_Sprite: {fileID: 21300028, guid: 2c8e6b0cc4272ca45ae75aa357a8f3a0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -93,23 +92,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fb38eda1467fb54a951e28e71e453bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blocking: 1
-  baseSprite: {fileID: 21300028, guid: 484fe2f734dc030449f58661a02f13ed, type: 3}
+  blocking: 0
+  baseSprite: {fileID: 21300028, guid: 2c8e6b0cc4272ca45ae75aa357a8f3a0, type: 3}
   resources: 00000000
-  costs: 05000000
+  costs: 0a000000
   health: 10
---- !u!114 &114269399623808756
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000010795907922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01a1d774079394e4a94bb122115d890b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  texture: {fileID: 2800000, guid: 484fe2f734dc030449f58661a02f13ed, type: 3}
-  tileTag: Wall
-  floor: 0
+  complete: 0

@@ -12,11 +12,12 @@ public class AutoTile : MonoBehaviour {
 	private SpriteRenderer spriteRenderer;
 	private UnityEngine.Object[] sortedTiles;
 	private Node node;
+	private Buildable buildable;
 
-	// Use this for initialization
 	void Start () {
 		spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
 		node = GetComponentInParent<Node>();
+		buildable = GetComponent<Buildable>();
 
 		if(!spriteRenderer) {
             throw new UnityException("Auto Tile needs a sprite renderer");
