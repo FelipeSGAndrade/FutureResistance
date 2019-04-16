@@ -13,18 +13,15 @@ public class CameraController : MonoBehaviour {
 	private float maxX;
 	private float minY;
 	private float maxY;
-	private float minOrtographicSize;
+	private float minOrtographicSize = 5;
 	private float maxOrtographicSize;
 	private float screenProportion;
+	private bool changed;
 
 	// Use this for initialization
 	void Start () {
 		currentCamera = GetComponent<Camera>();
-
-		screenProportion = (float)Screen.width / (float)Screen.height;
-		maxOrtographicSize = (float)MapManager.width / (2f * screenProportion);
-		minOrtographicSize = 1;
-
+		CalculateProportions();
 		CalculateCameraBorders();
 	}
 
@@ -32,6 +29,9 @@ public class CameraController : MonoBehaviour {
 	void Update () {
 		ApplyZoom();
 		ApplyPan();
+
+		if (changed)
+			CalculateCameraBorders();
 	}
 
 	private void ApplyZoom() {
@@ -42,10 +42,10 @@ public class CameraController : MonoBehaviour {
 
 		if (zoomIn) {
 			currentCamera.orthographicSize = Mathf.Clamp(currentCamera.orthographicSize - zoomSpeed, minOrtographicSize, maxOrtographicSize);
-			CalculateCameraBorders();
+			changed = true;
 		} else if (zoomOut) {
 			currentCamera.orthographicSize = Mathf.Clamp(currentCamera.orthographicSize + zoomSpeed, minOrtographicSize, maxOrtographicSize);
-			CalculateCameraBorders();
+			changed = true;
 		}
 	}
 
@@ -60,18 +60,31 @@ public class CameraController : MonoBehaviour {
 			float translation = panSpeed * Time.deltaTime;
 
 			if (up) {
-				newPosition.y = Mathf.Clamp(newPosition.y + translation, minY, maxY);
+				newPosition.y = newPosition.y + translation;
 			} else if (down) {
-				newPosition.y = Mathf.Clamp(newPosition.y - translation, minY, maxY);
+				newPosition.y = newPosition.y - translation;
 			}
 
 			if (left) {
-				newPosition.x = Mathf.Clamp(newPosition.x - translation, minX, maxX);
+				newPosition.x = newPosition.x - translation;
 			} else if (right) {
-				newPosition.x = Mathf.Clamp(newPosition.x + translation, minX, maxX);
+				newPosition.x = newPosition.x + translation;
 			}
 
 			transform.position = newPosition;
+			changed = true;
+		}
+	}
+
+	private void CalculateProportions() {
+		screenProportion = (float)Screen.width / (float)Screen.height;
+		float mapProportion = (float)MapManager.width / (float)MapManager.height;
+
+		if (screenProportion < mapProportion) {
+			maxOrtographicSize = (float)MapManager.height / 2f;
+		} else {
+			float differenceInSize = mapProportion / screenProportion;
+			maxOrtographicSize = (float)MapManager.height / 2f * differenceInSize;
 		}
 	}
 
@@ -90,6 +103,7 @@ public class CameraController : MonoBehaviour {
 		newPosition.z = transform.position.z;
 
 		transform.position = newPosition;
+		changed = false;
 	}
 
 	private bool MouseInUpperBorder() {
@@ -103,5 +117,10 @@ public class CameraController : MonoBehaviour {
 	}
 	private bool MouseInRightBorder() {
 		return mousePan && Input.mousePosition.x >= Screen.width - screenBorderThickness;
+	}
+
+	public void Center(Vector2 position) {
+		transform.position = new Vector3(position.x, position.y, transform.position.z);
+		changed = true;
 	}
 }
