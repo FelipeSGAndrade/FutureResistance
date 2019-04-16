@@ -4,30 +4,39 @@ using System.Collections.Generic;
 using UnityEngine.EventSystems;
 
 public class GameController : MonoBehaviour {
+	public static GameController instance;
 	public GameObject selectedCharacter;
 	public List<GameObject> characters;
 	public int charQuantity;
-	public UIController uiController;
 	public bool enableTerrainModifier;
-
-	private Camera mainCamera;
+	public Camera mainCamera;
 
 	private GameObject cursor;
 	private ActionType currentAction = ActionType.NONE;
 	private Buildable buildingAction;
+	private Node dragBegin;
+	private List<Node> selectedNodes = new List<Node>();
+
+	void Awake() {
+		if (instance != null) {
+			Debug.LogError("There is more than one Game Controller in Scene");
+			return;
+		}
+
+		instance = this;
+	}
 
 	void Start () {
-		mainCamera = Camera.main;
 		cursor = SceneHelper.InstantiateCursor(GetMousePosition());
 
 		if (enableTerrainModifier)
-			uiController.SetState(UIState.MAP_GENERATION);
+			UIController.instance.SetState(UIState.MAP_GENERATION);
 		else
 			StartGame();
 	}
 
 	public void StartGame() {
-		uiController.SetState(UIState.GAME);
+		UIController.instance.SetState(UIState.GAME);
 
 		MapManager.instance.Build();
 		InitializeChars();
@@ -39,8 +48,9 @@ public class GameController : MonoBehaviour {
 		}
 
 		selectedCharacter = characters[0];
-		Vector2 charPosition = characters[0].transform.position;
-		mainCamera.transform.position = new Vector3(charPosition.x, charPosition.y, mainCamera.transform.position.z);
+
+		CameraController cameraController = mainCamera.GetComponent<CameraController>();
+		cameraController.Center(selectedCharacter.transform.position);
 	}
 
 	void CreateCharacter() {
@@ -76,15 +86,50 @@ public class GameController : MonoBehaviour {
 				MoveCharacter(!isHoldingShift());
 		}
 
-		// if (Input.GetKeyDown(KeyCode.E))
-		// 	SetAction(ActionType.PLACE, SceneHelper.instance.WallPrefab);
 		if (Input.GetKeyDown(KeyCode.X))
-			SetAction((int)ActionType.DELETE);
+			SetAction(ActionType.DELETE);
 
-		if(Input.GetMouseButtonDown(0)) {
-			if(!EventSystem.current.IsPointerOverGameObject())
-				ExecuteAction(isHoldingShift());
+		if (Input.GetMouseButtonDown(0)) {
+			if (EventSystem.current.IsPointerOverGameObject())
+				return;
+
+			dragBegin = GetMouseNode();
 		}
+
+		if (dragBegin) {
+			Node currentMouseNode = GetMouseNode();
+
+			UnselectNodes();
+			SelectNodesInside(dragBegin.x, dragBegin.y, currentMouseNode.x, currentMouseNode.y);
+		}
+
+		if (Input.GetMouseButtonUp(0)) {
+			dragBegin = null;
+			ExecuteAction();
+			UnselectNodes();
+		}
+	}
+
+	void SelectNodesInside(int x1, int y1, int x2, int y2) {
+		int greaterX = Mathf.Max(x1, x2);
+		int lesserX = Mathf.Min(x1, x2);
+		int greaterY = Mathf.Max(y1, y2);
+		int lesserY = Mathf.Min(y1, y2);
+
+		for (int x = lesserX; x <= greaterX; x++) {
+			for (int y = lesserY; y <= greaterY; y++) {
+				SelectNode(MapManager.instance.nodeMap[x, y]);
+			}
+		}
+	}
+	void SelectNode(Node node) {
+		node.selected = true;
+		selectedNodes.Add(node);
+	}
+
+	void UnselectNodes() {
+		selectedNodes.ForEach((node) => node.selected = false);
+		selectedNodes.Clear();
 	}
 
 	void FixedUpdate() {
@@ -129,8 +174,7 @@ public class GameController : MonoBehaviour {
 		cursorSpriteRenderer.sprite = building.GetComponent<SpriteRenderer>().sprite;
 	}
 
-	public void SetAction(int actionType) {
-		ActionType action = (ActionType)actionType;
+	public void SetAction(ActionType action) {
 		if(action == currentAction) {
 			ResetAction();
 			return;
@@ -152,28 +196,19 @@ public class GameController : MonoBehaviour {
 		((SpriteRenderer)cursor.GetComponent<SpriteRenderer>()).sprite = null;
 	}
 
-	void ExecuteAction(bool keepAction) {
-		Node node = GetMouseNode();
-		if (!node) return;
-
-		bool resetWhenDone = keepAction;
-
-		switch(currentAction) {
-			case ActionType.BUILD:
-				TaskManager.AddTask(new BuildTask(node, buildingAction));
-				break;
-			// case ActionType.PLACE:
-			// 	node.AddBlock(actionPrefab);
-			// 	break;
-			case ActionType.DELETE:
-				node.RemoveBlock();
-				resetWhenDone = false;
-				break;
-			case ActionType.CHOP:
-				TaskManager.AddTask(new ChopTask(node));
-				break;
+	void ExecuteAction() {
+		foreach (Node node in selectedNodes) {
+			switch(currentAction) {
+				case ActionType.BUILD:
+					TaskManager.AddTask(new BuildTask(node, buildingAction));
+					break;
+				case ActionType.DELETE:
+					node.RemoveBlock();
+					break;
+				case ActionType.CHOP:
+					TaskManager.AddTask(new ChopTask(node));
+					break;
+			}
 		}
-
-		if (resetWhenDone) ResetAction();
 	}
 }

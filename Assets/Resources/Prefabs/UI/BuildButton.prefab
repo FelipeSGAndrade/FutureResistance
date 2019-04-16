@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 811b76441aabc1242bda1e927c8a950e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabToBuild: {fileID: 0}
-  gameManager: {fileID: 0}
+  building: {fileID: 0}
   buttonImage: {fileID: 1148430353700528464}
 --- !u!1001 &6761395516123767211
 PrefabInstance:
@@ -132,7 +131,8 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 9081593176356086890, guid: f8f9adfff5cce234894f75cf8c99072d, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: f8f9adfff5cce234894f75cf8c99072d, type: 3}
 --- !u!1 &1148430352003734604 stripped
 GameObject:

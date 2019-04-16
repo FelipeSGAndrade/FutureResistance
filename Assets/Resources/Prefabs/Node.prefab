@@ -47,8 +47,10 @@ MonoBehaviour:
   buildingPrefab: {fileID: 4077098056453623141, guid: ab3ed79622d46e740beb4085b7cec28b,
     type: 3}
   HighlightColor: {r: 1, g: 0.9729747, b: 0.10849059, a: 0.7058824}
+  SelectColor: {r: 0.05724919, g: 1, b: 0, a: 0.69803923}
   x: 0
   y: 0
+  selected: 0
 --- !u!61 &1612033533182864972
 BoxCollider2D:
   m_ObjectHideFlags: 0

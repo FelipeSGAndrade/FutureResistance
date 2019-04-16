@@ -12,8 +12,10 @@ GameObject:
   - component: {fileID: 212000010273877248}
   - component: {fileID: 4177579635849881680}
   - component: {fileID: 114269399623808756}
+  - component: {fileID: 5824711702493668587}
+  - component: {fileID: 2246702454774752458}
   m_Layer: 0
-  m_Name: Wall
+  m_Name: Plantation
   m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -70,7 +72,7 @@ SpriteRenderer:
   m_SortingLayerID: 1522505137
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300028, guid: 484fe2f734dc030449f58661a02f13ed, type: 3}
+  m_Sprite: {fileID: 21300030, guid: 1fb66b56ad48a6f48883427320222491, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -93,11 +95,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fb38eda1467fb54a951e28e71e453bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blocking: 1
-  baseSprite: {fileID: 21300028, guid: 484fe2f734dc030449f58661a02f13ed, type: 3}
-  resources: 00000000
-  costs: 05000000
+  blocking: 0
+  baseSprite: {fileID: 21300030, guid: 1fb66b56ad48a6f48883427320222491, type: 3}
+  resources: 
+  costs: 
   health: 10
+  complete: 0
 --- !u!114 &114269399623808756
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,6 +113,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01a1d774079394e4a94bb122115d890b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  texture: {fileID: 2800000, guid: 484fe2f734dc030449f58661a02f13ed, type: 3}
-  tileTag: Wall
+  texture: {fileID: 2800000, guid: 1fb66b56ad48a6f48883427320222491, type: 3}
+  tileTag: Plantation
   floor: 0
+--- !u!114 &5824711702493668587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000010795907922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12edb497b8c46334d93221f0f0a53f95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2246702454774752458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000010795907922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 690235b0ca0608c49a1228620ab3b885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stage: 0
+  growth: 0
+  grown: 0
+  seed: {fileID: 0}

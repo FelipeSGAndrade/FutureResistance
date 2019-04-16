@@ -1,43 +1,68 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Node : MonoBehaviour
 {
     public GameObject buildingPrefab;
     public Color HighlightColor;
+    public Color SelectColor;
 
     [HideInInspector]
     public int x;
     [HideInInspector]
     public int y;
+    [HideInInspector]
+    public bool selected;
 
     private GameObject block;
     private GameObject floor;
     private SpriteRenderer floorRenderer;
     private SpriteRenderer blockRenderer;
+    private Selectable blockSelectable;
+    private bool hovered;
 
     void Start() {
     }
 
     void Update() {
+        if (selected) {
+            if (blockRenderer)
+                blockRenderer.color = SelectColor;
+            else
+                floorRenderer.color = SelectColor;
+        }
+        else if (hovered) {
+            if (blockRenderer)
+                blockRenderer.color = HighlightColor;
+            else
+                floorRenderer.color = HighlightColor;
+        } else {
+            floorRenderer.color = Color.white;
+
+            if (blockRenderer && (blockRenderer.color == HighlightColor || blockRenderer.color == SelectColor))
+                blockRenderer.color = Color.white;
+        }
     }
 
     void OnMouseDown() {
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+
+        if (blockSelectable) {
+            blockSelectable.Select();
+        } else {
+            UIController.instance.HideBlockUI();
+        }
     }
 
     void OnMouseEnter() {
-        if (blockRenderer)
-            blockRenderer.color = HighlightColor;
-        else
-            floorRenderer.color = HighlightColor;
+        hovered = true;
     }
 
     void OnMouseExit() {
-        floorRenderer.color = Color.white;
-
-        if (blockRenderer)
-            blockRenderer.color = Color.white;
+        hovered = false;
     }
 
     public void Initialize(int x, int y) {
@@ -69,8 +94,10 @@ public class Node : MonoBehaviour
     }
 
     public GameObject AddBlock(GameObject blockPrefab) {
-        block = InstantiateChild(blockPrefab, true);
+        block = Instantiate(blockPrefab, transform);
+        block.name = blockPrefab.name;
         blockRenderer = block.GetComponent<SpriteRenderer>();
+        blockSelectable = block.GetComponent<Selectable>();
 
         UpdateWalkable();
         return block;
@@ -84,23 +111,16 @@ public class Node : MonoBehaviour
     }
 
     public GameObject AddFloor(GameObject floorPrefab) {
-        floor = InstantiateChild(floorPrefab, false);
+        floor = Instantiate(floorPrefab, transform);
         floorRenderer = floor.GetComponent<SpriteRenderer>();
 
-        MapManager.walkableMap[x, y] = IsWalkable();
+        UpdateWalkable();
         return floor;
     }
 
     public GameObject ReplaceFloor(GameObject floorPrefab) {
         Destroy(floor);
         return AddFloor(floorPrefab);
-    }
-
-    private GameObject InstantiateChild(GameObject prefab, bool sortSprite) {
-        GameObject newObject = (GameObject)Instantiate(prefab, new Vector2(x, y), Quaternion.identity);
-        newObject.transform.SetParent(transform);
-
-        return newObject;
     }
 
     public GameObject GetBlock() {
