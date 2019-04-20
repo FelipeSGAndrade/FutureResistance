@@ -97,6 +97,7 @@ MonoBehaviour:
   baseSprite: {fileID: 21300028, guid: 2c8e6b0cc4272ca45ae75aa357a8f3a0, type: 3}
   resources: 00000000
   costs: 0a000000
+  neededTicks: 10
   health: 10
   complete: 0
 --- !u!114 &5630676014073966855

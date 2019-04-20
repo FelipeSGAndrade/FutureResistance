@@ -15,13 +15,19 @@ public class Cultivable : MonoBehaviour
     private int ticksPerStage;
 
     void Start() {
-        cropRenderer = Instantiate(new GameObject(), transform).AddComponent<SpriteRenderer>();
+        GameObject cultivableObject = new GameObject("Cultivable");
+        cultivableObject.transform.SetParent(transform, false);
+
+        cropRenderer = cultivableObject.AddComponent<SpriteRenderer>();
         cropRenderer.sortingLayerName = "Items";
         cropRenderer.enabled = false;
     }
 
+    public void Plant() {
+        Plant(this.seed);
+    } 
+
     public void Plant(Seed seed) {
-        Debug.Log("PLANT");
         this.seed = seed;
         numberOfStages = seed.stageSprites.Length;
         ticksPerStage = seed.ticksToGrow / numberOfStages;

@@ -9,7 +9,6 @@ public class CultivableUI : MonoBehaviour
     public Button button;
 
     void Start() {
-        Debug.Log("SETUP");
         GameObject block = UIController.instance.SelectedBlock;
         if (!block) {
             Debug.LogError("No selected block");
@@ -22,7 +21,6 @@ public class CultivableUI : MonoBehaviour
             return;
         }
 
-        Debug.Log("SETUP DONE");
-        button.onClick.AddListener(() => cultivable.Plant(seed));
+        button.onClick.AddListener(() => TaskManager.AddTask(new PlantTask(block.GetComponentInParent<Node>())));
     }
 }

@@ -2,53 +2,52 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BuildCommandArgs : ICommandArgs {
+public class PlantCommandArgs : ICommandArgs {
 	public Node node;
 
-	public BuildCommandArgs(Node node) {
+	public PlantCommandArgs(Node node) {
 		this.node = node;
 	}
 }
 
-public class BuildCommand : MonoBehaviour, ICommand {
-
+public class PlantCommand : MonoBehaviour, ICommand {
 	private bool finished = false;
 	private bool successful = false;
-	private int buildTicks;
-	private Buildable buildable;
+	private int plantNeededTicks = 3;
+	private int plantTicks;
+	private Cultivable cultivable;
 
 	public bool Initialize(ICommandArgs args) {
-		BuildCommandArgs commandArgs = args as BuildCommandArgs;
+		PlantCommandArgs commandArgs = args as PlantCommandArgs;
 		if (commandArgs == null) {
 			Abort();
 			throw new UnityException("Wrong type of args");
 		}
 
-		buildable = commandArgs.node.GetBlock().GetComponent<Buildable>();
-		if (!buildable) {
+		cultivable = commandArgs.node.GetBlock().GetComponent<Cultivable>();
+		if (!cultivable) {
 			Abort();
-			Debug.LogError("Tried to build a non buildable object");
+			Debug.LogError("Tried to plant a non cultivable object");
 			return false;
 		}
 
-		TickSystem.Subscribe(Build);
+		TickSystem.Subscribe(Plant);
 
 		return true;
 	}
 
-	void Build() {
+	void Plant() {
 		if (finished) return;
 
-		buildTicks++;
-		buildable.BuildTick(buildTicks);
-		if (buildTicks >= buildable.neededTicks) {
-			TickSystem.Unsubscribe(Build);
-			FinishBuilding();
+		plantTicks++;
+		if (plantTicks >= plantNeededTicks) {
+			TickSystem.Unsubscribe(Plant);
+			FinishPlanting();
 		}
 	}
 
-	void FinishBuilding() {
-		buildable.FinishBuilding();
+	void FinishPlanting() {
+		cultivable.Plant();
 
 		finished = true;
 		successful = true;

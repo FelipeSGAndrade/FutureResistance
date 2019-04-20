@@ -14,9 +14,10 @@ public class TickSystem : MonoBehaviour {
 
 	private List<Action> onTickActions = new List<Action>();
 	private List<Action> removeList = new List<Action>();
+	private List<Action> subscribeList = new List<Action>();
 
 	public static void Subscribe(Action subscriberAction) {
-		Instance.onTickActions.Add(subscriberAction);
+		Instance.subscribeList.Add(subscriberAction);
 	}
 
 	public static void Unsubscribe(Action subscriberAction) {
@@ -30,12 +31,22 @@ public class TickSystem : MonoBehaviour {
 		timeToNextTick += Time.deltaTime;
 		if (timeToNextTick >= tickFrequency) {
 			timeToNextTick -= tickFrequency;
+			SubscribeActions();
 			ExecuteActions();
+			UnsubscribeActions();
 		}
+	}
+
+	void SubscribeActions() {
+		subscribeList.ForEach(action => onTickActions.Add(action));
+		subscribeList.Clear();
 	}
 
 	void ExecuteActions() {
 		onTickActions.ForEach(action => action());
+	}
+
+	void UnsubscribeActions() {
 		removeList.ForEach(action => onTickActions.Remove(action));
 		removeList.Clear();
 	}

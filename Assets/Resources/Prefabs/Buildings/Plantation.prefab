@@ -99,6 +99,7 @@ MonoBehaviour:
   baseSprite: {fileID: 21300030, guid: 1fb66b56ad48a6f48883427320222491, type: 3}
   resources: 
   costs: 
+  neededTicks: 5
   health: 10
   complete: 0
 --- !u!114 &114269399623808756
@@ -143,4 +144,4 @@ MonoBehaviour:
   stage: 0
   growth: 0
   grown: 0
-  seed: {fileID: 0}
+  seed: {fileID: 11400000, guid: ac384ceced7c6db44ac8d11696672120, type: 2}

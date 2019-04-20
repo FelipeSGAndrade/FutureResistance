@@ -4,5 +4,6 @@ public enum ActionType {
 	BUILD,
 	PLACE,
 	CHOP,
+	PLANT,
 	DELETE
 }

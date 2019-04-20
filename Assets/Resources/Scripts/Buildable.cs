@@ -9,6 +9,7 @@ public class Buildable : MonoBehaviour
     public Sprite baseSprite;
     public ResourceType[] resources;
     public int[] costs;
+	public int neededTicks;
     public int health;
 	[HideInInspector]
     public bool complete;
@@ -31,9 +32,9 @@ public class Buildable : MonoBehaviour
         }
     }
 
-	public void BuildTick(int ticks, int neededTicks) {
+	public void BuildTick(int currentTicks) {
         initialized = true;
-		float newAlpha = (1f / neededTicks) * ticks;
+		float newAlpha = (1f / neededTicks) * currentTicks;
 		spriteRenderer.color = new Color(1, 1, 1, newAlpha);
 	}
 
