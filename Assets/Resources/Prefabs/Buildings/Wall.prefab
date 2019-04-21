@@ -71,7 +71,7 @@ SpriteRenderer:
   m_SortingLayerID: 1522505137
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300028, guid: 484fe2f734dc030449f58661a02f13ed, type: 3}
+  m_Sprite: {fileID: 21300030, guid: 08ee8c1332c95554f90ad3b167ab3567, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -95,7 +95,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blocking: 1
-  baseSprite: {fileID: 21300028, guid: 484fe2f734dc030449f58661a02f13ed, type: 3}
+  baseSprite: {fileID: 21300030, guid: 08ee8c1332c95554f90ad3b167ab3567, type: 3}
   resources: 00000000
   costs: 05000000
   neededTicks: 20
@@ -113,7 +113,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01a1d774079394e4a94bb122115d890b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  texture: {fileID: 2800000, guid: 484fe2f734dc030449f58661a02f13ed, type: 3}
+  texture: {fileID: 2800000, guid: 08ee8c1332c95554f90ad3b167ab3567, type: 3}
   tileTag: Wall
   floor: 0
 --- !u!114 &1137470941309897060

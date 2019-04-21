@@ -208,9 +208,6 @@ public class GameController : MonoBehaviour {
 				case ActionType.CHOP:
 					TaskManager.AddTask(new ChopTask(node));
 					break;
-				case ActionType.PLANT:
-					TaskManager.AddTask(new PlantTask(node));
-					break;
 			}
 		}
 	}

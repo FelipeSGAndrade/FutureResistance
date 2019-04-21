@@ -79,13 +79,7 @@ public class AStar {
 		}
 
 		if (!MapManager.walkableMap[(int)destination.x, (int)destination.y]) {
-			if (stopBefore) {
-				if (!WalkableNeighbors()) {
-					Finish(null);
-					return;
-				}
-			}
-			else {
+			if (!stopBefore || !WalkableNeighbors()) {
 				Finish(null);
 				return;
 			}

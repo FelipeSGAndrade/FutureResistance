@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class PlantCommandArgs : ICommandArgs {
 	public Node node;
+	public Seed seed;
 
-	public PlantCommandArgs(Node node) {
+	public PlantCommandArgs(Node node, Seed seed) {
 		this.node = node;
+		this.seed = seed;
 	}
 }
 
@@ -15,6 +17,7 @@ public class PlantCommand : MonoBehaviour, ICommand {
 	private bool successful = false;
 	private int plantNeededTicks = 3;
 	private int plantTicks;
+	private Seed seed;
 	private Cultivable cultivable;
 
 	public bool Initialize(ICommandArgs args) {
@@ -24,6 +27,7 @@ public class PlantCommand : MonoBehaviour, ICommand {
 			throw new UnityException("Wrong type of args");
 		}
 
+		seed = commandArgs.seed;
 		cultivable = commandArgs.node.GetBlock().GetComponent<Cultivable>();
 		if (!cultivable) {
 			Abort();
@@ -47,7 +51,7 @@ public class PlantCommand : MonoBehaviour, ICommand {
 	}
 
 	void FinishPlanting() {
-		cultivable.Plant();
+		cultivable.Plant(seed);
 
 		finished = true;
 		successful = true;

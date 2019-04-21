@@ -5,8 +5,9 @@ using UnityEngine.UI;
 
 public class CultivableUI : MonoBehaviour
 {
-    public Seed seed;
     public Button button;
+    public Dropdown seedsDropDown;
+    public Seed[] seedOptions;
 
     void Start() {
         GameObject block = UIController.instance.SelectedBlock;
@@ -21,6 +22,22 @@ public class CultivableUI : MonoBehaviour
             return;
         }
 
-        button.onClick.AddListener(() => TaskManager.AddTask(new PlantTask(block.GetComponentInParent<Node>())));
+        if (seedOptions.Length == 0) {
+            Debug.LogError("No seed available");
+            return;
+        }
+
+        seedsDropDown.ClearOptions();
+        foreach (Seed seed in seedOptions) {
+            seedsDropDown.options.Add(new Dropdown.OptionData(seed.name));
+        }
+
+        button.onClick.AddListener(() => AddPlantTask(block));
+    }
+
+    void AddPlantTask(GameObject block) {
+        Seed selectedSeed = seedOptions[seedsDropDown.value];
+        Node node = block.GetComponentInParent<Node>();
+        TaskManager.AddTask(new PlantTask(node, selectedSeed));
     }
 }

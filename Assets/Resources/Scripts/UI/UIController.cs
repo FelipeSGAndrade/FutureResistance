@@ -34,9 +34,9 @@ public class UIController : MonoBehaviour
         }
     }
 
-    public void ShowBlockUI(GameObject block) {
+    public void ShowBlockUI(GameObject block, Selectable selectable) {
         selectedBlock = block;
-        blockUI.Show();
+        blockUI.Show(selectable);
     }
 
     public void HideBlockUI() {

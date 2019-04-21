@@ -91,10 +91,10 @@ public class MoveCommand : MonoBehaviour, ICommand {
 	}
 
 	private IEnumerator MovingCoordinator(Vector3[] steps) {
-		int lastStep = steps.Length;
-		if (stopBefore) lastStep--;
+		int stepCount = steps.Length;
+		if (stopBefore) stepCount--;
 
-		for (int i = 0; i < lastStep; i++) {
+		for (int i = 0; i < stepCount; i++) {
 
 			Vector3 step = steps[i];
 
@@ -110,6 +110,10 @@ public class MoveCommand : MonoBehaviour, ICommand {
 			yield return StartCoroutine(smoothMovementCoroutine);
 		}
 
+		if (stopBefore) {
+			FaceTarget(steps[stepCount]);
+		}
+
 		successful = true;
 		finished = true;
 	}
@@ -119,16 +123,7 @@ public class MoveCommand : MonoBehaviour, ICommand {
 		float sqrRemainingDistance = (transform.position - end).sqrMagnitude;
 
 		animator.SetBool("walking", true);
-
-		if ((transform.position.x - end.x) > 0 && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Left")) {
-			animator.SetTrigger("faceLeft");
-		} else if ((transform.position.x - end.x) < 0 && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Right")) {
-			animator.SetTrigger("faceRight");
-		} else if ((transform.position.y - end.y) > 0 && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Front")) {
-			animator.SetTrigger("faceFront");
-		} else if ((transform.position.y - end.y) < 0 && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Back")) {
-			animator.SetTrigger("faceBack");
-		}
+		FaceTarget(end);
 
 		yield return null;
 
@@ -143,5 +138,17 @@ public class MoveCommand : MonoBehaviour, ICommand {
 		}
 
 		animator.SetBool("walking", false);
+	}
+
+	private void FaceTarget(Vector3 target) {
+		if ((transform.position.x - target.x) > 0 && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Left")) {
+			animator.SetTrigger("faceLeft");
+		} else if ((transform.position.x - target.x) < 0 && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Right")) {
+			animator.SetTrigger("faceRight");
+		} else if ((transform.position.y - target.y) > 0 && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Front")) {
+			animator.SetTrigger("faceFront");
+		} else if ((transform.position.y - target.y) < 0 && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Back")) {
+			animator.SetTrigger("faceBack");
+		}
 	}
 }

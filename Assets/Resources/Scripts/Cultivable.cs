@@ -1,16 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Cultivable : MonoBehaviour
+public class Cultivable : BlockBehaviour
 {
-
-    public int stage;
-    public int growth;
-    public bool grown;
     public Seed seed;
+    public CultivableUI cultivableUIPrefab;
+
+    [HideInInspector] public bool grown;
 
     private SpriteRenderer cropRenderer;
+    private int stage;
+    private int growth;
     private int numberOfStages;
     private int ticksPerStage;
 
@@ -21,11 +23,12 @@ public class Cultivable : MonoBehaviour
         cropRenderer = cultivableObject.AddComponent<SpriteRenderer>();
         cropRenderer.sortingLayerName = "Items";
         cropRenderer.enabled = false;
-    }
 
-    public void Plant() {
-        Plant(this.seed);
-    } 
+        Selectable selectable = GetComponent<Selectable>();
+        if (selectable) {
+            selectable.AddInteraction(this);
+        }
+    }
 
     public void Plant(Seed seed) {
         this.seed = seed;
@@ -41,6 +44,8 @@ public class Cultivable : MonoBehaviour
     public void Harvest() {
         stage = 0;
         seed = null;
+        grown = false;
+        growth = 0;
         cropRenderer.enabled = false;
     }
 
@@ -61,5 +66,9 @@ public class Cultivable : MonoBehaviour
         if (previousStage != stage) {
             cropRenderer.sprite = seed.stageSprites[stage];
         }
+    }
+
+    public override void AddUI(Transform parent) {
+        Instantiate(cultivableUIPrefab, parent);
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-public class Buildable : MonoBehaviour
+public class Buildable : BlockBehaviour
 {
 	public bool blocking;
     public Sprite baseSprite;
@@ -47,4 +47,6 @@ public class Buildable : MonoBehaviour
 
 		parentNode.UpdateWalkable();
 	}
+	
+	public override void AddUI(Transform parent){}
 }

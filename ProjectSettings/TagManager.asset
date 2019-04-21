@@ -51,11 +51,11 @@ TagManager:
   - name: Blocks
     uniqueID: 1522505137
     locked: 0
-  - name: Unit
-    uniqueID: 4207531867
-    locked: 0
   - name: Items
     uniqueID: 709203389
+    locked: 0
+  - name: Unit
+    uniqueID: 4207531867
     locked: 0
   - name: Cursor
     uniqueID: 2541625491

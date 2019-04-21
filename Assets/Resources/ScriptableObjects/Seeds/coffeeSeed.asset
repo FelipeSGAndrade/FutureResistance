@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1c3460d5cef131d4c917bd33602668e8, type: 3}
-  m_Name: potatoSeed
+  m_Name: coffeeSeed
   m_EditorClassIdentifier: 
-  name: Potatoes
-  ticksToGrow: 50
+  name: Coffee
+  ticksToGrow: 100
   stageSprites:
-  - {fileID: 21300000, guid: afccef8511c55ac4f8d4aed584b46bed, type: 3}
-  - {fileID: 21300002, guid: afccef8511c55ac4f8d4aed584b46bed, type: 3}
+  - {fileID: 21300000, guid: 7665414b505b51c438cae4c5b3c5cb60, type: 3}
+  - {fileID: 21300002, guid: 7665414b505b51c438cae4c5b3c5cb60, type: 3}

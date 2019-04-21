@@ -6,8 +6,9 @@ public class PlantTask : Task {
 	private Seed seed;
 	private Node node;
 
-	public PlantTask(Node node) : base(TaskType.PLANT) {
+	public PlantTask(Node node, Seed seed) : base(TaskType.PLANT) {
 		this.node = node;
+		this.seed = seed;
 
 		Validate();
 	}
@@ -37,7 +38,7 @@ public class PlantTask : Task {
 	}
 
 	private void AddPlantCommand() {
-		PlantCommandArgs args = new PlantCommandArgs(node);
+		PlantCommandArgs args = new PlantCommandArgs(node, seed);
 		Step step = new Step(typeof(PlantCommand), args);
 		stepList.Add(step);
 	}

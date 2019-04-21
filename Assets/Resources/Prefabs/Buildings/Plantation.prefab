@@ -141,7 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 690235b0ca0608c49a1228620ab3b885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stage: 0
-  growth: 0
-  grown: 0
   seed: {fileID: 11400000, guid: ac384ceced7c6db44ac8d11696672120, type: 2}
+  cultivableUIPrefab: {fileID: 4344246246985661649, guid: aeadd2285a77ad245b93179086d516d3,
+    type: 3}
+  grown: 0

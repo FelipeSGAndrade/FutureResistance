@@ -6,10 +6,9 @@ using UnityEngine.UI;
 public class BlockUI : MonoBehaviour
 {
     public Text nameText;
-    public CultivableUI cultivableUIPrefab;
     public Transform blockStatusPanel;
 
-    public void Show() {
+    public void Show(Selectable selectable) {
         CleanUI();
 
         GameObject block = UIController.instance.SelectedBlock;
@@ -17,9 +16,9 @@ public class BlockUI : MonoBehaviour
         gameObject.SetActive(true);
         nameText.text = block.name;
 
-        if (block.GetComponent<Cultivable>()) {
-            CultivableSetup();
-        }
+        selectable
+            .GetInteractions()
+            .ForEach((interaction) => interaction.AddUI(blockStatusPanel));
     }
 
     public void Hide() {
@@ -28,12 +27,8 @@ public class BlockUI : MonoBehaviour
     }
 
     private void CleanUI() {
-        for (int i = 1; i < blockStatusPanel.childCount; i++) {
-            Destroy(blockStatusPanel.GetChild(i).gameObject);
+        foreach (Transform child in blockStatusPanel) {
+            Destroy(child.gameObject);
         }
-    }
-
-    private void CultivableSetup() {
-        CultivableUI.Instantiate(cultivableUIPrefab, blockStatusPanel);
     }
 }
