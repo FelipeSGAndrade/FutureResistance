@@ -23,7 +23,7 @@ public class AutoTile : MonoBehaviour {
             throw new UnityException("Auto Tile needs a sprite renderer");
 		}
 
-		UnityEngine.Object[] tiles = Resources.LoadAll("Sprites/" + texture.name);
+		UnityEngine.Object[] tiles = Resources.LoadAll("AutoTile/" + texture.name);
 		sortedTiles = new UnityEngine.Object[16];
 
 		sortedTiles[0] = tiles[16];	

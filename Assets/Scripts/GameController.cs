@@ -10,6 +10,7 @@ public class GameController : MonoBehaviour {
 	public int charQuantity;
 	public bool enableTerrainModifier;
 	public Camera mainCamera;
+	public Sprite cancelSprite;
 
 	private GameObject cursor;
 	private ActionType currentAction = ActionType.NONE;
@@ -185,7 +186,6 @@ public class GameController : MonoBehaviour {
 		switch(action) {
 			case ActionType.CHOP:
 			case ActionType.DELETE:
-				Sprite cancelSprite = (Sprite)(Resources.LoadAll ("Sprites/Z18-TileA5"))[10];
 				((SpriteRenderer)cursor.GetComponent<SpriteRenderer> ()).sprite = cancelSprite;
 				break;
 		}
